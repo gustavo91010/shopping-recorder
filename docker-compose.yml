@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+     - POSTGRES_USER=postgress
+     - POSTGRES_PASSWORD=123456
+     - POSTGRES_DB=recall_de_compras
+    ports:
+     - '5432:5432'
+    volumes:
+     - volume-postgres:/var/lib/postgresql/data
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+     - '8080:8080'
+    depends_on:
+     - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/recall_de_compras
+      SPRING_DATASOURCE_USERNAME: postgress
+      SPRING_DATASOURCE_PASSWORD: 123456
+volumes:
+  volume-postgres:
