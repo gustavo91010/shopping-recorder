@@ -11,8 +11,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="purchases")
 public class Purchase {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +25,8 @@ public class Purchase {
 	@OneToMany(mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PurchaseItem> items = new ArrayList<>();
     private BigDecimal totalValue;
+    
+    
 	public Long getId() {
 		return id;
 	}
