@@ -8,6 +8,7 @@ public class RecallDeComprasApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(RecallDeComprasApplication.class, args);
+		
 	}
 
 }
