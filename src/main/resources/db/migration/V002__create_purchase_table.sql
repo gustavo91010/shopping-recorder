@@ -1,6 +1,7 @@
-
+-- V002__create_purchase_table.sql
 CREATE TABLE IF NOT EXISTS purchases (
     id SERIAL PRIMARY KEY,
-    purchase_date TIMESTAMP,
-    total_value NUMERIC
+    users_id BIGINT REFERENCES users(id) NOT NULL,
+    purchase_date TIMESTAMP NOT NULL,
+    total_value NUMERIC NOT NULL
 );

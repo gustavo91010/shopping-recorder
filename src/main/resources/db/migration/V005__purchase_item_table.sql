@@ -1,3 +1,4 @@
+-- V005__create_purchase_items_table.sql
 CREATE TABLE IF NOT EXISTS purchase_items (
     id SERIAL PRIMARY KEY,
     purchase_id BIGINT NOT NULL,

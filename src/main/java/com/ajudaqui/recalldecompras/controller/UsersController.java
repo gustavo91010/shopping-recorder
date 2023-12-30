@@ -25,7 +25,6 @@ public class UsersController {
 	@PostMapping
 	@Transactional
 	public Users register(@RequestBody UsersDto usersDto) {
-		System.err.println("No controller "+usersDto);
 		return usersService.register(usersDto);
 	}
 	

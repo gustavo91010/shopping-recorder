@@ -1,5 +1,7 @@
 package com.ajudaqui.recalldecompras.entity;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,7 +14,8 @@ public class Users {
 	private Long id;
 	private String name;
 	private String email;
-	private String password;
+	private LocalDateTime created_at;
+	private LocalDateTime updated_at ;
 	
 	public Long getId() {
 		return id;
@@ -32,16 +35,19 @@ public class Users {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getPassword() {
-		return password;
+	public LocalDateTime getCreated_at() {
+		return created_at;
 	}
-	public void setPassword(String password) {
-		this.password = password;
+	public void setCreated_at(LocalDateTime created_at) {
+		this.created_at = created_at;
 	}
-	@Override
-	public String toString() {
-		return "Users [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + "]";
+	public LocalDateTime getUpdated_at() {
+		return updated_at;
 	}
+	public void setUpdated_at(LocalDateTime updated_at) {
+		this.updated_at = updated_at;
+	}
+	
 	
 	
 
