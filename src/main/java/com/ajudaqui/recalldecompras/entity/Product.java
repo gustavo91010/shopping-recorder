@@ -22,14 +22,14 @@ public class Product {
 	private Long id;
 	private String name;
 	private String brand;
-	private String measure;
+	private String average_unit;
+	private BigDecimal price;
 
 	private LocalDateTime created_at;
 	private LocalDateTime updated_at;
-	private BigDecimal totalValue;
 
-	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<ProductPriceHistory> priceHistory = new ArrayList<>();
+//	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+//	private List<ProductPriceHistory> priceHistory = new ArrayList<>();
 
 	public Long getId() {
 		return id;
@@ -55,13 +55,6 @@ public class Product {
 		this.brand = brand;
 	}
 
-	public String getMeasure() {
-		return measure;
-	}
-
-	public void setMeasure(String measure) {
-		this.measure = measure;
-	}
 
 	public LocalDateTime getCreated_at() {
 		return created_at;
@@ -78,23 +71,6 @@ public class Product {
 	public void setUpdated_at(LocalDateTime updated_at) {
 		this.updated_at = updated_at;
 	}
-
-	public BigDecimal getTotalValue() {
-		return totalValue;
-	}
-
-	public void setTotalValue(BigDecimal totalValue) {
-		this.totalValue = totalValue;
-	}
-
-	public List<ProductPriceHistory> getPriceHistory() {
-		return priceHistory;
-	}
-
-	public void setPriceHistory(List<ProductPriceHistory> priceHistory) {
-		this.priceHistory = priceHistory;
-	}
-	
 	
 	
 
