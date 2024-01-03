@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ajudaqui.recalldecompras.dto.UsersDto;
+import com.ajudaqui.recalldecompras.dto.RegisterUsersDto;
 import com.ajudaqui.recalldecompras.entity.Users;
 import com.ajudaqui.recalldecompras.exception.NotFoundEntityException;
 import com.ajudaqui.recalldecompras.repository.UsersRepository;
@@ -16,9 +16,9 @@ import com.ajudaqui.recalldecompras.repository.UsersRepository;
 public class UsersService {
 	
 	@Autowired
-	UsersRepository usersRepository;
+	private UsersRepository usersRepository;
 	
-	public Users register(UsersDto usersDto) {
+	public Users register(RegisterUsersDto usersDto) {
 //		Users users= usersDto.toUsers();
 		Users users= new Users();
 		users.setName(usersDto.getName());
@@ -55,7 +55,7 @@ public class UsersService {
 		return usersRepository.findAll();
 	}
 	
-	public void update(Long id, UsersDto usersDto) {
+	public void update(Long id, RegisterUsersDto usersDto) {
 		Users users = findById(id);
 		
 		if(!usersDto.getName().isEmpty()) {

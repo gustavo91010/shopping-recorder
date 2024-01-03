@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ajudaqui.recalldecompras.dto.UsersDto;
+import com.ajudaqui.recalldecompras.dto.RegisterUsersDto;
 import com.ajudaqui.recalldecompras.entity.Users;
 import com.ajudaqui.recalldecompras.service.UsersService;
 
@@ -24,7 +24,7 @@ public class UsersController {
 	
 	@PostMapping
 	@Transactional
-	public Users register(@RequestBody UsersDto usersDto) {
+	public Users register(@RequestBody RegisterUsersDto usersDto) {
 		return usersService.register(usersDto);
 	}
 	
