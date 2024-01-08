@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.ajudaqui.recalldecompras.dto.RegisterProductDto;
 import com.ajudaqui.recalldecompras.entity.Product;
@@ -14,6 +15,7 @@ import com.ajudaqui.recalldecompras.exception.NotFoundEntityException;
 import com.ajudaqui.recalldecompras.repository.ProductRepository;
 import com.ajudaqui.recalldecompras.service.model.ProductUpdate;
 
+@Service
 public class ProductService {
 	@Autowired
 	private ProductRepository productRepository;
