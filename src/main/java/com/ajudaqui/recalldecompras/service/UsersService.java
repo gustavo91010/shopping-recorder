@@ -19,13 +19,9 @@ public class UsersService {
 	private UsersRepository usersRepository;
 	
 	public Users register(RegisterUsersDto usersDto) {
-//		Users users= usersDto.toUsers();
 		Users users= new Users();
 		users.setName(usersDto.getName());
 		users.setEmail(usersDto.getEmail());
-		users.setCreated_at(LocalDateTime.now());
-		users.setUpdated_at(LocalDateTime.now());
-		
 		
 		usersRepository.save(users);
 		return users;

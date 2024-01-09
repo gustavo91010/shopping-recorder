@@ -13,10 +13,11 @@ import com.ajudaqui.recalldecompras.entity.Product;
 import com.ajudaqui.recalldecompras.exception.MsgException;
 import com.ajudaqui.recalldecompras.exception.NotFoundEntityException;
 import com.ajudaqui.recalldecompras.repository.ProductRepository;
-import com.ajudaqui.recalldecompras.service.model.ProductUpdate;
+import com.ajudaqui.recalldecompras.service.model.ProductVo;
 
 @Service
 public class ProductService {
+
 	@Autowired
 	private ProductRepository productRepository;
 
@@ -62,7 +63,18 @@ public class ProductService {
 
 	}
 
-	public Product update(Long id, ProductUpdate productUpdate) {
+	public boolean produtpJaCadastrado(String description, String brand) {
+		if (productRepository.findByBrand(brand).size() > 0) {
+			return true;
+		}
+		if (productRepository.findByName(description).size() > 0) {
+			return true;
+		}
+		return false;
+
+	}
+
+	public Product update(Long id, ProductVo productUpdate) {
 		Product product = findById(id);
 
 		if (!productUpdate.getName().isEmpty()) {
@@ -93,6 +105,7 @@ public class ProductService {
 		return product;
 
 	}
+
 	public void delete(Long id) {
 		productRepository.deleteById(id);
 	}

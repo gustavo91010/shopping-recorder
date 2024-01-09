@@ -2,7 +2,7 @@ package com.ajudaqui.recalldecompras.service.model;
 
 import java.math.BigDecimal;
 
-public class ProductUpdate {
+public class ProductVo {
 	private String name;
 	private String brand;
 	private String average_unit;

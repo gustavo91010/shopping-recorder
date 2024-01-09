@@ -28,6 +28,15 @@ public class PurchaseItem {
 
 	private int quantity;
 	private BigDecimal totalValue;
+	
+
+	public PurchaseItem(Purchase purchase, Product product, int quantity) {
+		super();
+		this.purchase = purchase;
+		this.product = product;
+		this.quantity = quantity;
+		this.totalValue= product.getPrice().multiply(new BigDecimal(quantity));
+	}
 
 	public Long getId() {
 		return id;

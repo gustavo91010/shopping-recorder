@@ -20,7 +20,7 @@ import com.ajudaqui.recalldecompras.dto.RegisterProductDto;
 import com.ajudaqui.recalldecompras.dto.response.ApiProduct;
 import com.ajudaqui.recalldecompras.entity.Product;
 import com.ajudaqui.recalldecompras.service.ProductService;
-import com.ajudaqui.recalldecompras.service.model.ProductUpdate;
+import com.ajudaqui.recalldecompras.service.model.ProductVo;
 
 @RestController
 @RequestMapping("/product")
@@ -58,7 +58,7 @@ public class ProductController {
 
 	}
 	@PutMapping("/update/{id}")
-	public void update(@PathVariable("id") Long id,@RequestBody ProductUpdate productUpdate) {
+	public void update(@PathVariable("id") Long id,@RequestBody ProductVo productUpdate) {
 		productService.update(id, productUpdate);
 	}
 	@PutMapping("/change-price/{id}")

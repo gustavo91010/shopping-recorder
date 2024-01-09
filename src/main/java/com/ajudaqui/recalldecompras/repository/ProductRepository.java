@@ -5,13 +5,11 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ajudaqui.recalldecompras.entity.Product;
+import com.ajudaqui.recalldecompras.entity.PurchaseItem;
 
 public interface ProductRepository extends JpaRepository<Product, Long>{
-//	Optional<Users> findByName(String name);
 
-	List<Product> findByName(String name);
+List<Product> findByName(String name);
 	
 	List<Product> findByBrand(String brand);
-
-
 }

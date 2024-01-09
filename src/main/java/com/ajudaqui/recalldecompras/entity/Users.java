@@ -17,6 +17,12 @@ public class Users {
 	private LocalDateTime created_at;
 	private LocalDateTime updated_at ;
 	
+	
+	
+	public Users() {
+		this.setCreated_at(LocalDateTime.now());
+		this.setUpdated_at(LocalDateTime.now());
+	}
 	public Long getId() {
 		return id;
 	}
