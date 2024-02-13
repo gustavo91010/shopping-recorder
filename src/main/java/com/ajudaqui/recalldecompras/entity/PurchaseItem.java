@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="purchase_items")
+@Table(name = "purchase_items")
 public class PurchaseItem {
 
 	@Id
@@ -26,25 +26,27 @@ public class PurchaseItem {
 	@JoinColumn(name = "product_id", nullable = false)
 	private Product product;
 
-	private int quantity;
-	private int quantity_average;
-	private int last_quantity;
+	private Double quantity;
+	private Double quantity_average;
+	private Double last_quantity;
 
 	private BigDecimal price_total;
 	private BigDecimal price_average;
 	private BigDecimal last_price;
 
-
-	
-	
-	
-
-	public PurchaseItem(Purchase purchase, Product product, int quantity) {
+	public PurchaseItem(Purchase purchase, Product product, Double quantity) {
 		super();
 		this.purchase = purchase;
 		this.product = product;
 		this.quantity = quantity;
-		this.price_total= product.getPrice().multiply(new BigDecimal(quantity));
+		this.quantity_average = 0.0;
+		this.last_quantity = 0.0;
+
+		this.price_total = product.getPrice().multiply(new BigDecimal(quantity));
+		this.price_average= BigDecimal.ZERO;
+		this.last_price= BigDecimal.ZERO;
+
+		
 	}
 
 	public Long getId() {
@@ -71,11 +73,11 @@ public class PurchaseItem {
 		this.product = product;
 	}
 
-	public int getQuantity() {
+	public Double getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(int quantity) {
+	public void setQuantity(Double quantity) {
 		this.quantity = quantity;
 	}
 
@@ -87,11 +89,11 @@ public class PurchaseItem {
 		this.price_total = totalValue;
 	}
 
-	public int getQuantity_average() {
+	public Double getQuantity_average() {
 		return quantity_average;
 	}
 
-	public void setQuantity_average(int quantity_average) {
+	public void setQuantity_average(Double quantity_average) {
 		this.quantity_average = quantity_average;
 	}
 
@@ -103,11 +105,11 @@ public class PurchaseItem {
 		this.price_average = price_average;
 	}
 
-	public int getLast_quantity() {
+	public Double getLast_quantity() {
 		return last_quantity;
 	}
 
-	public void setLast_quantity(int last_quantity) {
+	public void setLast_quantity(Double last_quantity) {
 		this.last_quantity = last_quantity;
 	}
 
@@ -126,7 +128,5 @@ public class PurchaseItem {
 	public void setLast_price(BigDecimal last_price) {
 		this.last_price = last_price;
 	}
-
-	
 
 }

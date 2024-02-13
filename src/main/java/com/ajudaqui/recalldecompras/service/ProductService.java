@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.coyote.http11.filters.VoidInputFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,6 +57,15 @@ public class ProductService {
 		}
 		return products;
 
+	}
+
+	public Product findSpecificProduct(String name, String brand) {
+		Optional<Product> product = productRepository.findSpecificProduct(name, brand);
+		if (product.isEmpty()) {
+			throw new MsgException("Nenhum produto com esse nome foi encontrado");
+		}
+		
+		return product.get();
 	}
 
 	public List<Product> findByBrand(String brand) {
