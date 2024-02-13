@@ -34,7 +34,7 @@ public class PurchaseService {
 		return purchases;
 
 	}
-
+//	shopping_recorder
 	// clonagem do historico de compras
 	public Purchase shoppingClone(Long userId, Long purchaseId) {
 		if (!purchasePertenceUser(userId, purchaseId)) {
