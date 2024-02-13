@@ -3,13 +3,15 @@ package com.ajudaqui.recalldecompras.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.ajudaqui.recalldecompras.entity.Product;
-import com.ajudaqui.recalldecompras.entity.PurchaseItem;
 
-public interface ProductRepository extends JpaRepository<Product, Long>{
-
-List<Product> findByName(String name);
+public interface ProductRepository extends JpaRepository<Product, Long> {
 	
+	@Query(value = "SELECT * FROM products where name = :name ", nativeQuery = true)
+	List<Product> findByName(String name);
+	
+	@Query(value = "SELECT * FROM products where brand = :brand ", nativeQuery = true)
 	List<Product> findByBrand(String brand);
 }

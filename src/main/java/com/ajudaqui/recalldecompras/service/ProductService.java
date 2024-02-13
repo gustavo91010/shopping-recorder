@@ -22,6 +22,11 @@ public class ProductService {
 	private ProductRepository productRepository;
 
 	public Product registration(RegisterProductDto registerProductDto) {
+
+		if (productIsRegisteder(registerProductDto.getName(), registerProductDto.getBrand())) {
+			throw new MsgException("produto já cadastrado");
+		}
+
 		Product product = new Product();
 		product.setName(registerProductDto.getName());
 		product.setBrand(registerProductDto.getBrand());
@@ -63,13 +68,19 @@ public class ProductService {
 
 	}
 
-	public boolean produtpJaCadastrado(String description, String brand) {
-		if (productRepository.findByBrand(brand).size() > 0) {
-			return true;
+	public boolean productIsRegisteder(String name, String brand) {
+		List<Product> sameName = productRepository.findByName(name);
+
+		if (sameName.size() > 0) {
+			for (Product product : sameName) {
+
+				if (product.getBrand().equalsIgnoreCase(brand)) {
+					return true;
+				}
+			}
+
 		}
-		if (productRepository.findByName(description).size() > 0) {
-			return true;
-		}
+
 		return false;
 
 	}
