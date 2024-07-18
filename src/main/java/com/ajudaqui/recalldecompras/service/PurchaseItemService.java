@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ajudaqui.recalldecompras.dto.RegisterProductDto;
+import com.ajudaqui.recalldecompras.dto.RegisterProductDTO;
 import com.ajudaqui.recalldecompras.entity.Product;
 import com.ajudaqui.recalldecompras.entity.Purchase;
 import com.ajudaqui.recalldecompras.entity.PurchaseItem;
@@ -26,7 +26,7 @@ public class PurchaseItemService {
 	@Autowired
 	private ProductService procudService;
 
-	public PurchaseItem newItem(Long purchaseId, RegisterProductDto registerProductDto, Double quant) {
+	public PurchaseItem newItem(Long purchaseId, RegisterProductDTO registerProductDto, Double quant) {
 
 		Purchase purchase = purchaseService.findById(purchaseId);
 

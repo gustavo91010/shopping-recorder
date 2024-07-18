@@ -9,7 +9,7 @@ import org.apache.coyote.http11.filters.VoidInputFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ajudaqui.recalldecompras.dto.RegisterProductDto;
+import com.ajudaqui.recalldecompras.dto.RegisterProductDTO;
 import com.ajudaqui.recalldecompras.entity.Product;
 import com.ajudaqui.recalldecompras.exception.MsgException;
 import com.ajudaqui.recalldecompras.exception.NotFoundEntityException;
@@ -22,7 +22,7 @@ public class ProductService {
 	@Autowired
 	private ProductRepository productRepository;
 
-	public Product registration(RegisterProductDto registerProductDto) {
+	public Product registration(RegisterProductDTO registerProductDto) {
 
 		if (productIsRegisteder(registerProductDto.getName(), registerProductDto.getBrand())) {
 			throw new MsgException("produto já cadastrado");

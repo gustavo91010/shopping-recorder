@@ -2,7 +2,7 @@ package com.ajudaqui.recalldecompras.dto;
 
 import java.math.BigDecimal;
 
-public class RegisterProductDto {
+public class RegisterPurchaseDTO {
 	private String name;
 	private String brand;
 	private String average_unit;

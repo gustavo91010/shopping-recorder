@@ -3,17 +3,17 @@ package com.ajudaqui.recalldecompras.dto;
 import com.ajudaqui.recalldecompras.entity.Users;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class RegisterUsersDto {
+public class RegisterUsersDTO {
 	@JsonProperty("name")
 	private String name;
 	@JsonProperty("email")
 	private String email;
 
-	public RegisterUsersDto() {
+	public RegisterUsersDTO() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public RegisterUsersDto(String name, String email) {
+	public RegisterUsersDTO(String name, String email) {
 		super();
 		this.name = name;
 		this.email = email;

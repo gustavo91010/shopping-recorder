@@ -6,7 +6,10 @@ public class ApiProduct {
 	private Product product;
 	
 
+
+
 	public ApiProduct(Product product) {
+		super();
 		this.product = product;
 	}
 

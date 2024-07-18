@@ -22,16 +22,16 @@ public class PurchaseService {
 	@Autowired
 	private UsersService usersService;
 
-	public List<Purchase> newPurchase(Long userId) {
-		Users user = usersService.findById(userId);
+	public Purchase newPurchase(String  jwt) {
+		Users user = usersService.findById(5L);
 		Purchase purchase = new Purchase(user);
 		purchase = purchaseRepository.save(purchase);
 
-		List<Purchase> purchases = findAllByUsers(userId);
+//		List<Purchase> purchases = findAllByUsers(userId);
+//
+//		purchases.add(purchase);
 
-		purchases.add(purchase);
-
-		return purchases;
+		return purchase;
 
 	}
 //	shopping_recorder

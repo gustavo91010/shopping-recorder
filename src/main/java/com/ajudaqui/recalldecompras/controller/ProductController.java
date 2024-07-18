@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ajudaqui.recalldecompras.dto.RegisterProductDto;
+import com.ajudaqui.recalldecompras.dto.RegisterProductDTO;
 import com.ajudaqui.recalldecompras.dto.response.ApiProduct;
 import com.ajudaqui.recalldecompras.entity.Product;
 import com.ajudaqui.recalldecompras.exception.MsgException;
@@ -32,14 +32,14 @@ public class ProductController {
 
 	@PostMapping
 	@Transactional
-	public ResponseEntity<?> register(@RequestBody RegisterProductDto usersDto) {
-try {
-	Product product = productService.registration(usersDto);
-	return new ResponseEntity<>(new ApiProduct(product), HttpStatus.CREATED);
-	
-} catch (MsgException e) {
-	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-}
+	public ResponseEntity<?> register(@RequestBody RegisterProductDTO usersDto) {
+		try {
+			Product product = productService.registration(usersDto);
+			return new ResponseEntity<>(new ApiProduct(product), HttpStatus.CREATED);
+
+		} catch (MsgException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
 
 	}
 
@@ -56,30 +56,29 @@ try {
 		return productService.findByName(name);
 
 	}
+
 	@Transactional
 	@GetMapping("/brand/{brand}")
 	public List<Product> findByBrand(@PathVariable("brand") String brand) {
 		return productService.findByBrand(brand);
 
 	}
+
 	@PutMapping("/update/{id}")
-	public void update(@PathVariable("id") Long id,@RequestBody ProductVo productUpdate) {
+	public void update(@PathVariable("id") Long id, @RequestBody ProductVo productUpdate) {
 		productService.update(id, productUpdate);
 	}
+
 	@PutMapping("/change-price/{id}")
-	public void changePrice(@PathVariable("id") Long id,@RequestParam("price") double price) {
+	public void changePrice(@PathVariable("id") Long id, @RequestParam("price") double price) {
 		productService.changePrice(id, price);
 	}
-	
+
 	@Transactional
 	@GetMapping("/test/{name}")
 	public String test(@PathVariable("name") String name) {
-		return "ola teste: "+name;
+		return "ola teste: " + name;
 
 	}
-	
-	
-	
-	
-	
+
 }
