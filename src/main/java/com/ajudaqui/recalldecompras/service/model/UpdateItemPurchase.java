@@ -51,7 +51,7 @@ public class UpdateItemPurchase {
 		
 		product.setName(this.name);
 		product.setBrand(this.brand);
-		product.setAverage_unit(this.average_unit);
+		product.setMeasurement_unit(this.average_unit);
 		product.setPrice(this.price);
 		
 		product.setUpdated_at(LocalDateTime.now());

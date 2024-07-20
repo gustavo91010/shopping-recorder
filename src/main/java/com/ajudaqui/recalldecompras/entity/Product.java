@@ -19,7 +19,8 @@ public class Product {
 	private Long id;
 	private String name;
 	private String brand;
-	private String average_unit;
+	private String measurement_unit;
+	private Double quantity;
 	private BigDecimal price;
 
 	private LocalDateTime created_at;
@@ -69,12 +70,22 @@ public class Product {
 		this.updated_at = updated_at;
 	}
 
-	public String getAverage_unit() {
-		return average_unit;
+
+
+	public String getMeasurement_unit() {
+		return measurement_unit;
 	}
 
-	public void setAverage_unit(String average_unit) {
-		this.average_unit = average_unit;
+	public void setMeasurement_unit(String measurement_unit) {
+		this.measurement_unit = measurement_unit;
+	}
+
+	public Double getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Double quantity) {
+		this.quantity = quantity;
 	}
 
 	public BigDecimal getPrice() {
@@ -87,7 +98,7 @@ public class Product {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(average_unit, brand, name);
+		return Objects.hash(measurement_unit, brand, name);
 	}
 
 	@Override
@@ -99,7 +110,7 @@ public class Product {
 		if (getClass() != obj.getClass())
 			return false;
 		Product other = (Product) obj;
-		return Objects.equals(average_unit, other.average_unit) && Objects.equals(brand, other.brand)
+		return Objects.equals(measurement_unit, other.measurement_unit) && Objects.equals(brand, other.brand)
 				&& Objects.equals(name, other.name);
 	}
 	
