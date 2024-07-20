@@ -5,6 +5,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,8 +25,16 @@ public class UsersController {
 	
 	@PostMapping
 	@Transactional
-	public Users register(@RequestBody RegisterUsersDTO usersDto) {
-		return usersService.register(usersDto);
+	public String register(@RequestBody RegisterUsersDTO usersDto) {
+		try {
+			Users user = usersService.register(usersDto);
+			return "Usuário registrado com sucesso! id: "+user.getId();
+			
+		} catch (UnexpectedRollbackException e) {
+			// TODO: handle exception
+			return  e.getMessage();
+			
+		}
 	}
 	
 	@GetMapping

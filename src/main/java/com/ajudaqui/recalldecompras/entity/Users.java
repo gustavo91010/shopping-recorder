@@ -53,6 +53,11 @@ public class Users {
 	public void setUpdated_at(LocalDateTime updated_at) {
 		this.updated_at = updated_at;
 	}
+	@Override
+	public String toString() {
+		return "Users [id=" + id + ", name=" + name + ", email=" + email + ", created_at=" + created_at
+				+ ", updated_at=" + updated_at + "]";
+	}
 	
 	
 	

@@ -4,17 +4,21 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ajudaqui.recalldecompras.entity.Purchase;
 import com.ajudaqui.recalldecompras.entity.PurchaseItem;
 import com.ajudaqui.recalldecompras.entity.Users;
+import com.ajudaqui.recalldecompras.exception.MsgException;
 import com.ajudaqui.recalldecompras.exception.NotFoundEntityException;
 import com.ajudaqui.recalldecompras.repository.PurchaseRepository;
 
 @Service
 public class PurchaseService {
+	Logger logger= LoggerFactory.getLogger(PurchaseService.class);
 
 	@Autowired
 	private PurchaseRepository purchaseRepository;
@@ -22,10 +26,16 @@ public class PurchaseService {
 	@Autowired
 	private UsersService usersService;
 
-	public Purchase newPurchase(String  jwt) {
-		Users user = usersService.findById(5L);
-		Purchase purchase = new Purchase(user);
+	public Purchase newPurchase(String  name, String jwt) {
+		Users user = usersService.findByJwt(jwt);
+		if(user == null) {
+			throw new MsgException("Usuário não encontrado");
+		}
+		System.out.println("na nova compra "+user);
+		Purchase purchase = new Purchase(name,user);
+		
 		purchase = purchaseRepository.save(purchase);
+		logger.info("Iniciando nova compra.");
 
 //		List<Purchase> purchases = findAllByUsers(userId);
 //

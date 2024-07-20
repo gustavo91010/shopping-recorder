@@ -21,6 +21,7 @@ public class Purchase {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	private String name;
 	private LocalDateTime purchaseDate;
 	private BigDecimal totalValue;
 
@@ -31,9 +32,11 @@ public class Purchase {
 	@OneToMany(mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PurchaseItem> items = new ArrayList<>();
 
-	public Purchase(Users users) {
+	public Purchase(String name, Users users) {
+		this.name= name;
 		this.users = users;
 		this.setPurchaseDate(LocalDateTime.now());
+		this.totalValue= BigDecimal.ZERO;
 	}
 
 	public Long getId() {
@@ -42,6 +45,14 @@ public class Purchase {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public LocalDateTime getPurchaseDate() {

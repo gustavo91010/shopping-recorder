@@ -20,16 +20,15 @@ import com.ajudaqui.recalldecompras.service.PurchaseService;
 @RestController
 @RequestMapping("/compras")
 public class PurchaseController {
-	
+
 	@Autowired
 	private PurchaseService purchaseService;
-	
-	@PostMapping
-	@Transactional
-	@PreAuthorize("dasRole('USER')")
-	public ResponseEntity<?> register(@RequestHeader("Authorization") String jwt) {
+
+//	@PreAuthorize("dasRole('USER')")
+	@PostMapping()
+	public ResponseEntity<?> register(@RequestHeader("name") String name,@RequestHeader("jwt") String jwt) {
 		try {
-			 Purchase product = purchaseService.newPurchase(jwt);
+			Purchase product = purchaseService.newPurchase(name,jwt);
 			return new ResponseEntity<>(new ApiPurchase(product), HttpStatus.CREATED);
 
 		} catch (MsgException e) {
@@ -38,11 +37,24 @@ public class PurchaseController {
 
 	}
 
-	@GetMapping
+	@GetMapping()
+	public ResponseEntity<?> ha(@RequestHeader("jwt") String jwt) {
+		try {
+			System.out.println("ha "+jwt);
+			return new ResponseEntity<>(jwt, HttpStatus.CREATED);
+
+		} catch (MsgException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+
+	}
+
+//	@GetMapping
 	public String teste() {
 		System.err.println("Chamou!");
 		return "Apareceu??";
 	}
+
 	@GetMapping("/teste")
 	public String teste2() {
 		System.err.println("Chamou o teste?");
