@@ -2,7 +2,8 @@
 CREATE TABLE IF NOT EXISTS purchases (
     id SERIAL PRIMARY KEY,
     name VARCHAR (100) NOT NULL,
-    users_id BIGINT REFERENCES users(id) NOT NULL,
-    purchase_date TIMESTAMP NOT NULL,
+    user_id BIGINT NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL,
     total_value NUMERIC NOT NULL
 );

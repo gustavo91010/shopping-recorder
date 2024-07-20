@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ajudaqui.recalldecompras.dto.UsersDTO;
 import com.ajudaqui.recalldecompras.entity.Purchase;
 import com.ajudaqui.recalldecompras.entity.PurchaseItem;
-import com.ajudaqui.recalldecompras.entity.Users;
 import com.ajudaqui.recalldecompras.exception.MsgException;
 import com.ajudaqui.recalldecompras.exception.NotFoundEntityException;
 import com.ajudaqui.recalldecompras.repository.PurchaseRepository;
@@ -27,19 +27,15 @@ public class PurchaseService {
 	private UsersService usersService;
 
 	public Purchase newPurchase(String  name, String jwt) {
-		Users user = usersService.findByJwt(jwt);
+		UsersDTO user = usersService.findByJwt(jwt);
 		if(user == null) {
 			throw new MsgException("Usuário não encontrado");
 		}
-		System.out.println("na nova compra "+user);
-		Purchase purchase = new Purchase(name,user);
+		Purchase purchase = new Purchase(name,user.getId());
 		
 		purchase = purchaseRepository.save(purchase);
 		logger.info("Iniciando nova compra.");
 
-//		List<Purchase> purchases = findAllByUsers(userId);
-//
-//		purchases.add(purchase);
 
 		return purchase;
 
@@ -68,7 +64,7 @@ public class PurchaseService {
 
 	public boolean purchasePertenceUser(Long userId, Long purchaseId) {
 		Purchase purchase = findById(purchaseId);
-		return purchase.getUsers().getId() == userId;
+		return purchase.getUser_id() == userId;
 	}
 
 	private List<Purchase> findAllByUsers(Long userId) {

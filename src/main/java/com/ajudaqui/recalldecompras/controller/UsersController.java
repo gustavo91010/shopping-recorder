@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ajudaqui.recalldecompras.dto.RegisterUsersDTO;
-import com.ajudaqui.recalldecompras.entity.Users;
+import com.ajudaqui.recalldecompras.dto.UsersDTO;
 import com.ajudaqui.recalldecompras.service.UsersService;
 
 @RestController
@@ -23,23 +23,23 @@ public class UsersController {
 	@Autowired
 	private UsersService usersService;
 	
-	@PostMapping
-	@Transactional
-	public String register(@RequestBody RegisterUsersDTO usersDto) {
-		try {
-			Users user = usersService.register(usersDto);
-			return "Usuário registrado com sucesso! id: "+user.getId();
-			
-		} catch (UnexpectedRollbackException e) {
-			// TODO: handle exception
-			return  e.getMessage();
-			
-		}
-	}
+//	@PostMapping
+//	@Transactional
+//	public String register(@RequestBody RegisterUsersDTO usersDto) {
+//		try {
+//			Users user = usersService.register(usersDto);
+//			return "Usuário registrado com sucesso! id: "+user.getId();
+//			
+//		} catch (UnexpectedRollbackException e) {
+//			// TODO: handle exception
+//			return  e.getMessage();
+//			
+//		}
+//	}
 	
-	@GetMapping
-	public List<Users> findAll() {
-	return	usersService.findAll();
-	}
+//	@GetMapping
+//	public List<Users> findAll() {
+//	return	usersService.findAll();
+//	}
 
 }

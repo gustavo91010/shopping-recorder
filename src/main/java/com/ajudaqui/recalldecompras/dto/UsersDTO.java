@@ -1,16 +1,8 @@
-package com.ajudaqui.recalldecompras.entity;
+package com.ajudaqui.recalldecompras.dto;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-@Entity
-public class Users {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+public class UsersDTO {
 	private Long id;
 	private String name;
 	private String email;
@@ -19,9 +11,7 @@ public class Users {
 	
 	
 	
-	public Users() {
-		this.setCreated_at(LocalDateTime.now());
-		this.setUpdated_at(LocalDateTime.now());
+	public UsersDTO() {
 	}
 	public Long getId() {
 		return id;

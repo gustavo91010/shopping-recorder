@@ -15,27 +15,28 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.ajudaqui.recalldecompras.dto.UsersDTO;
+
 @Entity
 @Table(name = "purchases")
 public class Purchase {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	private Long user_id;
 	private String name;
-	private LocalDateTime purchaseDate;
+	private LocalDateTime created_at;
+	private LocalDateTime updated_at;
 	private BigDecimal totalValue;
-
-	@ManyToOne
-	@JoinColumn(name = "users_id", nullable = false)
-	private Users users;
 
 	@OneToMany(mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PurchaseItem> items = new ArrayList<>();
 
-	public Purchase(String name, Users users) {
+	public Purchase(String name, Long user_id) {
 		this.name= name;
-		this.users = users;
-		this.setPurchaseDate(LocalDateTime.now());
+		this.user_id = user_id;
+		this.created_at=LocalDateTime.now();
+		this.updated_at=LocalDateTime.now();
 		this.totalValue= BigDecimal.ZERO;
 	}
 
@@ -55,12 +56,21 @@ public class Purchase {
 		this.name = name;
 	}
 
-	public LocalDateTime getPurchaseDate() {
-		return purchaseDate;
+
+	public LocalDateTime getCreated_at() {
+		return created_at;
 	}
 
-	public void setPurchaseDate(LocalDateTime purchaseDate) {
-		this.purchaseDate = purchaseDate;
+	public void setCreated_at(LocalDateTime created_at) {
+		this.created_at = created_at;
+	}
+
+	public LocalDateTime getUpdated_at() {
+		return updated_at;
+	}
+
+	public void setUpdated_at(LocalDateTime updated_at) {
+		this.updated_at = updated_at;
 	}
 
 	public BigDecimal getTotalValue() {
@@ -71,12 +81,13 @@ public class Purchase {
 		this.totalValue = totalValue;
 	}
 
-	public Users getUsers() {
-		return users;
+
+	public Long getUser_id() {
+		return user_id;
 	}
 
-	public void setUsers(Users users) {
-		this.users = users;
+	public void setUser_id(Long user_id) {
+		this.user_id = user_id;
 	}
 
 	public List<PurchaseItem> getItems() {

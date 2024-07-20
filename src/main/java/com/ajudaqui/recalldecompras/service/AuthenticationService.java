@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ajudaqui.recalldecompras.client.AuthenticationClient;
-import com.ajudaqui.recalldecompras.entity.Users;
+import com.ajudaqui.recalldecompras.dto.UsersDTO;
 
 @Service
 public class AuthenticationService {
@@ -12,7 +12,7 @@ public class AuthenticationService {
 @Autowired	
 AuthenticationClient authenticationClient;
 
-public Users findByJwt(String jwtToken) {
+public UsersDTO findByJwt(String jwtToken) {
 	
 	return  authenticationClient.findByJwt(jwtToken);
 }

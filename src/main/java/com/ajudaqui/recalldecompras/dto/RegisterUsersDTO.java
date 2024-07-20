@@ -1,6 +1,5 @@
 package com.ajudaqui.recalldecompras.dto;
 
-import com.ajudaqui.recalldecompras.entity.Users;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class RegisterUsersDTO {
@@ -36,8 +35,8 @@ public class RegisterUsersDTO {
 	}
 
 
-	public Users toUsers() {
-		Users users = new Users();
+	public UsersDTO toUsers() {
+		UsersDTO users = new UsersDTO();
 		users.setName(this.name);
 		users.setEmail(this.email);
 		return users;
