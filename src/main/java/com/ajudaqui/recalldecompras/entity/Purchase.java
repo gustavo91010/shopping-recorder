@@ -39,6 +39,9 @@ public class Purchase {
 		this.updated_at=LocalDateTime.now();
 		this.totalValue= BigDecimal.ZERO;
 	}
+	public Purchase() {
+		// TODO Auto-generated constructor stub
+	}
 
 	public Long getId() {
 		return id;

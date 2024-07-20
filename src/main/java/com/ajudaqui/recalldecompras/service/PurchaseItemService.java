@@ -1,8 +1,12 @@
 package com.ajudaqui.recalldecompras.service;
 
+import static java.lang.String.format;
+
 import java.math.BigDecimal;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +16,12 @@ import com.ajudaqui.recalldecompras.entity.Purchase;
 import com.ajudaqui.recalldecompras.entity.PurchaseItem;
 import com.ajudaqui.recalldecompras.exception.MsgException;
 import com.ajudaqui.recalldecompras.repository.PurchaseItensRepository;
-import com.ajudaqui.recalldecompras.service.model.UpdateItemPurchase;
+import com.ajudaqui.recalldecompras.service.model.PurchaseItemVO;
+import com.ajudaqui.recalldecompras.service.model.UpdateItemPurchaseVO;
 
 @Service
 public class PurchaseItemService {
+	Logger logger= LoggerFactory.getLogger(PurchaseItemService.class);
 
 	@Autowired
 	private PurchaseItensRepository purchaseItemRepository;
@@ -26,27 +32,35 @@ public class PurchaseItemService {
 	@Autowired
 	private ProductService procudService;
 
-	public PurchaseItem newItem(Long purchaseId, RegisterProductDTO registerProductDto, Double quant) {
+	public PurchaseItem newItem(PurchaseItemVO purchaseItemVO) {
+		logger.info(format("Adicionando produto %s a compra id %d",purchaseItemVO.getName(), purchaseItemVO.getPurchaseId()));
+		Purchase purchase = purchaseService.findById(purchaseItemVO.getPurchaseId());
 
-		Purchase purchase = purchaseService.findById(purchaseId);
-
-		Product procudt = procudService.findSpecificProduct(registerProductDto.getName(),
-				registerProductDto.getBrand());
+		Product procudt = procudService.findSpecificProduct(purchaseItemVO.getName(),
+				purchaseItemVO.getBrand());
 
 		if (procudt == null) {
+			RegisterProductDTO registerProductDto = new RegisterProductDTO();
+			registerProductDto.setName(purchaseItemVO.getName());
+			registerProductDto.setBrand((purchaseItemVO.getBrand()));
+			registerProductDto.setMeasurement_unit(purchaseItemVO.getMeasurement_unit());
+			registerProductDto.setPrice(purchaseItemVO.getPrice());
+			registerProductDto.setQuantity(purchaseItemVO.getQuantity_product());
+
 
 			procudt = procudService.registration(registerProductDto);
 		}
 
-		PurchaseItem item = new PurchaseItem(purchase, procudt, quant);
+		PurchaseItem item = new PurchaseItem(purchase, procudt, purchaseItemVO.getQuantity_items());
 		item = purchaseItemRepository.save(item);
+		System.out.println("novo item: "+item.toString());
 
 		purchase.getItems().add(item);
 
 		// Precisa disso para atualizar o purchase mesmo? sera que não da pra por em
 		// cascata?
 
-		return new PurchaseItem(purchaseService.attPurchase(purchase), procudt, quant);
+		return new PurchaseItem(purchaseService.attPurchase(purchase), procudt, purchaseItemVO.getQuantity_items());
 
 	}
 
@@ -80,7 +94,7 @@ public class PurchaseItemService {
 
 	}
 
-	public PurchaseItem update(Long id, UpdateItemPurchase updateItemPurchase) {
+	public PurchaseItem update(Long id, UpdateItemPurchaseVO updateItemPurchase) {
 		PurchaseItem item = findById(id);
 
 		if (!updateItemPurchase.getName().isEmpty()) {

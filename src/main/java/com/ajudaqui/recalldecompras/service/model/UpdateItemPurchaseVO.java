@@ -1,12 +1,19 @@
 package com.ajudaqui.recalldecompras.service.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
-public class ProductVo {
+import com.ajudaqui.recalldecompras.entity.Product;
+
+public class UpdateItemPurchaseVO {
+	
 	private String name;
 	private String brand;
 	private String average_unit;
 	private BigDecimal price;
+	private Double quantity;
+
+	
 	public String getName() {
 		return name;
 	}
@@ -31,6 +38,26 @@ public class ProductVo {
 	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
+	public Double getQuantity() {
+		return quantity;
+	}
+	public void setQuantity(Double quantity) {
+		this.quantity = quantity;
+	}
+	
+	
+	public Product extractProdut() {
+		Product product = new Product();
+		
+		product.setName(this.name);
+		product.setBrand(this.brand);
+		product.setMeasurement_unit(this.average_unit);
+		product.setPrice(this.price);
+		
+		product.setUpdated_at(LocalDateTime.now());
+		return product;
+	}
+	
 	
 
 }

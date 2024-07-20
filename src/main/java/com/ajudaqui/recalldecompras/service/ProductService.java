@@ -17,7 +17,7 @@ import com.ajudaqui.recalldecompras.entity.Product;
 import com.ajudaqui.recalldecompras.exception.MsgException;
 import com.ajudaqui.recalldecompras.exception.NotFoundEntityException;
 import com.ajudaqui.recalldecompras.repository.ProductRepository;
-import com.ajudaqui.recalldecompras.service.model.ProductVo;
+import com.ajudaqui.recalldecompras.service.model.ProductVO;
 
 @Service
 public class ProductService {
@@ -122,7 +122,7 @@ public class ProductService {
 
 	}
 
-	public Product update(Long id, ProductVo productUpdate) {
+	public Product update(Long id, ProductVO productUpdate) {
 		Product product = findById(id);
 		logger.info(format("Atualizando produto %s da marca %s.", product.getName(), product.getBrand()));
 

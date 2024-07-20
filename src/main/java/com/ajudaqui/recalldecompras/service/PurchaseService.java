@@ -55,10 +55,11 @@ public class PurchaseService {
 
 	public Purchase findById(Long id) {
 		Optional<Purchase> purchase = purchaseRepository.findById(id);
-		if (purchase.isEmpty()) {
-			throw new NotFoundEntityException("Compra não localizada.");
-		}
-
+//		if (purchase.isEmpty()) {
+//			throw new NotFoundEntityException("Compra não localizada.");
+//		}
+//
+//		return purchase.get();
 		return purchase.get();
 	}
 

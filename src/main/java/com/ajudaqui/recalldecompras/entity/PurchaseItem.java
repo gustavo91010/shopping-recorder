@@ -33,7 +33,9 @@ public class PurchaseItem {
 	private BigDecimal price_total;
 	private BigDecimal price_average;
 	private BigDecimal last_price;
-
+public PurchaseItem() {
+	// TODO Auto-generated constructor stub
+}
 	public PurchaseItem(Purchase purchase, Product product, Double quantity) {
 		super();
 		this.purchase = purchase;
@@ -128,5 +130,13 @@ public class PurchaseItem {
 	public void setLast_price(BigDecimal last_price) {
 		this.last_price = last_price;
 	}
+	@Override
+	public String toString() {
+		return "PurchaseItem [id=" + id + ", purchase=" + purchase + ", product=" + product + ", quantity=" + quantity
+				+ ", quantity_average=" + quantity_average + ", last_quantity=" + last_quantity + ", price_total="
+				+ price_total + ", price_average=" + price_average + ", last_price=" + last_price + "]";
+	}
+	
+	
 
 }
