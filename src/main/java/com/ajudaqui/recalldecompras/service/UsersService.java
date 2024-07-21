@@ -5,7 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ajudaqui.recalldecompras.dto.UsersDTO;
+import com.ajudaqui.recalldecompras.client.AuthenticationClient;
+import com.ajudaqui.recalldecompras.client.dto.UsersDTO;
 
 import feign.FeignException;
 
@@ -13,15 +14,18 @@ import feign.FeignException;
 public class UsersService {
 	Logger logger= LoggerFactory.getLogger(UsersService.class);
 	
+//	
+//	@Autowired
+//	private UserService authenticationService;
 	
-	@Autowired
-	private AuthenticationService authenticationService;
+	@Autowired	
+	AuthenticationClient authenticationClient;
 	
 	public UsersDTO findByJwt(String jwt) {
 		logger.info("Buscando usuario pelo jwt");
 		try {
 			
-			return authenticationService.findByJwt(jwt);
+			return authenticationClient.findByJwt(jwt);
 		} catch (FeignException e) {
 //			e.getMessage();
 			logger.error(e.getMessage());

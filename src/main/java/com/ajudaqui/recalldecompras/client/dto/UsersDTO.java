@@ -1,4 +1,4 @@
-package com.ajudaqui.recalldecompras.dto;
+package com.ajudaqui.recalldecompras.client.dto;
 
 import java.time.LocalDateTime;
 

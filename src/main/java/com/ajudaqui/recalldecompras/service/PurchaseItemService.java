@@ -37,7 +37,7 @@ public class PurchaseItemService {
 				purchaseItemVO.getPurchaseId()));
 		Purchase purchase = purchaseService.findById(purchaseItemVO.getPurchaseId());
 
-		Product procudt = oldOrNewProduct(purchaseItemVO);
+		Product procudt = findOldOrRegisterNewProduct(purchaseItemVO);
 
 
 		// Verificar se o produto já existe na lista, incrementa
@@ -137,7 +137,7 @@ public class PurchaseItemService {
 	private void delete(Long id) {
 		purchaseItemRepository.deleteById(id);
 	}
-	private Product oldOrNewProduct(PurchaseItemVO purchaseItemVO) {
+	private Product findOldOrRegisterNewProduct(PurchaseItemVO purchaseItemVO) {
 		Product procudt= new Product();
 		try {
 			procudt = procudService.findSpecificProduct(purchaseItemVO.getName(), purchaseItemVO.getBrand());

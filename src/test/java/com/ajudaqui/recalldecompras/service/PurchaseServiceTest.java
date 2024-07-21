@@ -7,7 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.ajudaqui.recalldecompras.dto.UsersDTO;
+import com.ajudaqui.recalldecompras.client.dto.UsersDTO;
 import com.ajudaqui.recalldecompras.entity.Purchase;
 
 @ExtendWith(MockitoExtension.class)

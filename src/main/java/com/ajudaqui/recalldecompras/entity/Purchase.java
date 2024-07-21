@@ -15,7 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.ajudaqui.recalldecompras.dto.UsersDTO;
+import com.ajudaqui.recalldecompras.client.dto.UsersDTO;
 
 @Entity
 @Table(name = "purchases")
