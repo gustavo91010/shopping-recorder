@@ -65,8 +65,7 @@ public class PurchaseItemService {
 				quantityItem =quantityItem+ purchaseItemVO.getQuantity_items();
 				item.setQuantity(quantityItem);
 				
-				
-				item.setPrice_total(null);
+				item.setPrice_total(attTotalPrice(quantityItem, item.getProduct().getPrice()));
 
 				purchaseItemRepository.save(item);
 				System.out.println("saida item" + item.toString());
@@ -101,6 +100,12 @@ public class PurchaseItemService {
 		}
 		return item.get();
 
+	}
+	
+	//Atualizando total item
+	private BigDecimal attTotalPrice(Double quanrity,BigDecimal price) {
+		return price.multiply(new BigDecimal(quanrity));
+		
 	}
 
 //	calculate the average 
