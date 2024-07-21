@@ -5,7 +5,6 @@ import static java.lang.String.format;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-import org.apache.tomcat.jni.Proc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,62 +37,38 @@ public class PurchaseItemService {
 				purchaseItemVO.getPurchaseId()));
 		Purchase purchase = purchaseService.findById(purchaseItemVO.getPurchaseId());
 
-		Product procudt = new Product();
-		
-		//Verifica se o produto ja esta cadastrado, caso não, cadastra ele
-		try {
-			procudt=	procudService.findSpecificProduct(purchaseItemVO.getName(), purchaseItemVO.getBrand());
-		} catch (MsgException e) {
-			
-			RegisterProductDTO registerProductDto = new RegisterProductDTO();
-			registerProductDto.setName(purchaseItemVO.getName());
-			registerProductDto.setBrand((purchaseItemVO.getBrand()));
-			registerProductDto.setMeasurement_unit(purchaseItemVO.getMeasurement_unit());
-			registerProductDto.setPrice(purchaseItemVO.getPrice());
-			registerProductDto.setQuantity(purchaseItemVO.getQuantity_product());
+		Product procudt = oldOrNewProduct(purchaseItemVO);
 
-			procudt = procudService.registration(registerProductDto);
-		}
-				
+
 		// Verificar se o produto já existe na lista, incrementa
-		System.out.println("chegou aqui");
 		for (PurchaseItem item : purchase.getItems()) {
 			if (item.getProduct().equals(procudt)) {
-				System.out.println("entrada item" + item.toString());
-				
+				logger.info(format("Incrementando item já existente na lista"));
+
 				Double quantityItem = item.getQuantity();
-				quantityItem =quantityItem+ purchaseItemVO.getQuantity_items();
+				quantityItem = quantityItem + purchaseItemVO.getQuantity_items();
+
 				item.setQuantity(quantityItem);
-				
 				item.setPrice_total(attTotalPrice(quantityItem, item.getProduct().getPrice()));
 
 				purchaseItemRepository.save(item);
-				System.out.println("saida item" + item.toString());
-
 
 				return purchase;
-
 			}
-
 		}
-		System.out.println("passou dali");
 
 		PurchaseItem item = new PurchaseItem(purchase, procudt, purchaseItemVO.getQuantity_items());
+		logger.info(format("Criando novo item."));
 
 		item = purchaseItemRepository.save(item);
-		System.out.println("novo item: " + item.toString());
-
 		purchase.getItems().add(item);
 
-		// Precisa disso para atualizar o purchase mesmo? sera que não da pra por em
-		// cascata?
-
-//		new PurchaseItem(purchaseService.attPurchase(purchase), procudt, purchaseItemVO.getQuantity_items());
 		return purchase;
-
 	}
 
-	public PurchaseItem findById(Long id) {
+
+
+	private PurchaseItem findById(Long id) {
 		Optional<PurchaseItem> item = purchaseItemRepository.findById(id);
 		if (item.isEmpty()) {
 			throw new MsgException("Item não encontrado");
@@ -101,15 +76,15 @@ public class PurchaseItemService {
 		return item.get();
 
 	}
-	
-	//Atualizando total item
-	private BigDecimal attTotalPrice(Double quanrity,BigDecimal price) {
+
+	// Atualizando total item
+	private BigDecimal attTotalPrice(Double quanrity, BigDecimal price) {
 		return price.multiply(new BigDecimal(quanrity));
-		
+
 	}
 
 //	calculate the average 
- 	public BigDecimal priceAverage(BigDecimal lastValue, BigDecimal currentValue) {
+	private BigDecimal priceAverage(BigDecimal lastValue, BigDecimal currentValue) {
 		if (lastValue == null || currentValue == null) {
 			throw new MsgException("Não é possível calcular a média. Alguns dos valores são nulos.");
 		}
@@ -120,7 +95,7 @@ public class PurchaseItemService {
 
 	}
 
-	public Double quantityAverage(Double lastValue, Double currentValue) {
+	private Double quantityAverage(Double lastValue, Double currentValue) {
 		if (lastValue == null || currentValue == null) {
 			throw new MsgException("Não é possível calcular a média. Alguns dos valores são nulos.");
 		}
@@ -129,7 +104,7 @@ public class PurchaseItemService {
 
 	}
 
-	public PurchaseItem update(Long id, UpdateItemPurchaseVO updateItemPurchase) {
+	private PurchaseItem update(Long id, UpdateItemPurchaseVO updateItemPurchase) {
 		PurchaseItem item = findById(id);
 
 		if (!updateItemPurchase.getName().isEmpty()) {
@@ -159,8 +134,22 @@ public class PurchaseItemService {
 
 	}
 
-	public void delete(Long id) {
+	private void delete(Long id) {
 		purchaseItemRepository.deleteById(id);
+	}
+	private Product oldOrNewProduct(PurchaseItemVO purchaseItemVO) {
+		Product procudt= new Product();
+		try {
+			procudt = procudService.findSpecificProduct(purchaseItemVO.getName(), purchaseItemVO.getBrand());
+		} catch (MsgException e) {
+
+			RegisterProductDTO registerProductDto = new RegisterProductDTO(purchaseItemVO.getName(),
+					purchaseItemVO.getBrand(), purchaseItemVO.getMeasurement_unit(),
+					purchaseItemVO.getQuantity_product(), purchaseItemVO.getPrice());
+
+			procudt = procudService.registration(registerProductDto);
+		}
+		return procudt;
 	}
 
 }

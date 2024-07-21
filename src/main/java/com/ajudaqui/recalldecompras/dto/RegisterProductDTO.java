@@ -7,8 +7,19 @@ public class RegisterProductDTO {
 	private String brand;
 	private String measurement_unit;
 	private Double quantity;
-
 	private BigDecimal price;
+	
+	public RegisterProductDTO() {
+		// TODO Auto-generated constructor stub
+	}
+	public RegisterProductDTO(String name, String brand, String measurement_unit, Double quantity, BigDecimal price) {
+		super();
+		this.name = name;
+		this.brand = brand;
+		this.measurement_unit = measurement_unit;
+		this.quantity = quantity;
+		this.price = price;
+	}
 	public String getName() {
 		return name;
 	}
