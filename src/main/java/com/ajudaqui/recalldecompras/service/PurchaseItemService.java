@@ -5,6 +5,7 @@ import static java.lang.String.format;
 import java.math.BigDecimal;
 import java.util.Optional;
 
+import org.apache.tomcat.jni.Proc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import com.ajudaqui.recalldecompras.service.model.UpdateItemPurchaseVO;
 
 @Service
 public class PurchaseItemService {
-	Logger logger= LoggerFactory.getLogger(PurchaseItemService.class);
+	Logger logger = LoggerFactory.getLogger(PurchaseItemService.class);
 
 	@Autowired
 	private PurchaseItensRepository purchaseItemRepository;
@@ -32,14 +33,18 @@ public class PurchaseItemService {
 	@Autowired
 	private ProductService procudService;
 
-	public PurchaseItem newItem(PurchaseItemVO purchaseItemVO) {
-		logger.info(format("Adicionando produto %s a compra id %d",purchaseItemVO.getName(), purchaseItemVO.getPurchaseId()));
+	public Purchase newItem(PurchaseItemVO purchaseItemVO) {
+		logger.info(format("Adicionando produto %s a compra id %d", purchaseItemVO.getName(),
+				purchaseItemVO.getPurchaseId()));
 		Purchase purchase = purchaseService.findById(purchaseItemVO.getPurchaseId());
 
-		Product procudt = procudService.findSpecificProduct(purchaseItemVO.getName(),
-				purchaseItemVO.getBrand());
-
-		if (procudt == null) {
+		Product procudt = new Product();
+		
+		//Verifica se o produto ja esta cadastrado, caso não, cadastra ele
+		try {
+			procudt=	procudService.findSpecificProduct(purchaseItemVO.getName(), purchaseItemVO.getBrand());
+		} catch (MsgException e) {
+			
 			RegisterProductDTO registerProductDto = new RegisterProductDTO();
 			registerProductDto.setName(purchaseItemVO.getName());
 			registerProductDto.setBrand((purchaseItemVO.getBrand()));
@@ -47,20 +52,45 @@ public class PurchaseItemService {
 			registerProductDto.setPrice(purchaseItemVO.getPrice());
 			registerProductDto.setQuantity(purchaseItemVO.getQuantity_product());
 
-
 			procudt = procudService.registration(registerProductDto);
 		}
+				
+		// Verificar se o produto já existe na lista, incrementa
+		System.out.println("chegou aqui");
+		for (PurchaseItem item : purchase.getItems()) {
+			if (item.getProduct().equals(procudt)) {
+				System.out.println("entrada item" + item.toString());
+				
+				Double quantityItem = item.getQuantity();
+				quantityItem =quantityItem+ purchaseItemVO.getQuantity_items();
+				item.setQuantity(quantityItem);
+				
+				
+				item.setPrice_total(null);
+
+				purchaseItemRepository.save(item);
+				System.out.println("saida item" + item.toString());
+
+
+				return purchase;
+
+			}
+
+		}
+		System.out.println("passou dali");
 
 		PurchaseItem item = new PurchaseItem(purchase, procudt, purchaseItemVO.getQuantity_items());
+
 		item = purchaseItemRepository.save(item);
-		System.out.println("novo item: "+item.toString());
+		System.out.println("novo item: " + item.toString());
 
 		purchase.getItems().add(item);
 
 		// Precisa disso para atualizar o purchase mesmo? sera que não da pra por em
 		// cascata?
 
-		return new PurchaseItem(purchaseService.attPurchase(purchase), procudt, purchaseItemVO.getQuantity_items());
+//		new PurchaseItem(purchaseService.attPurchase(purchase), procudt, purchaseItemVO.getQuantity_items());
+		return purchase;
 
 	}
 
@@ -74,7 +104,7 @@ public class PurchaseItemService {
 	}
 
 //	calculate the average 
-	public BigDecimal priceAverage(BigDecimal lastValue, BigDecimal currentValue) {
+ 	public BigDecimal priceAverage(BigDecimal lastValue, BigDecimal currentValue) {
 		if (lastValue == null || currentValue == null) {
 			throw new MsgException("Não é possível calcular a média. Alguns dos valores são nulos.");
 		}

@@ -32,6 +32,18 @@ public class Purchase {
 	@OneToMany(mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PurchaseItem> items = new ArrayList<>();
 
+	
+	@Override
+	public String toString() {
+		return "Purchase [id=" + id + ","
+				+ " user_id=" + user_id + ","
+				+ " name=" + name + ","
+				+ " created_at=" + created_at
+				+ " updated_at=" + updated_at + ","
+				+ " totalValue=" + totalValue + ","
+				+ " items="
+				+ items + "]";
+	}
 	public Purchase(String name, Long user_id) {
 		this.name= name;
 		this.user_id = user_id;

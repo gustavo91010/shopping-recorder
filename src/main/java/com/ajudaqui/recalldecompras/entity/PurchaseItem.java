@@ -132,9 +132,9 @@ public PurchaseItem() {
 	}
 	@Override
 	public String toString() {
-		return "PurchaseItem [id=" + id + ", purchase=" + purchase + ", product=" + product + ", quantity=" + quantity
-				+ ", quantity_average=" + quantity_average + ", last_quantity=" + last_quantity + ", price_total="
-				+ price_total + ", price_average=" + price_average + ", last_price=" + last_price + "]";
+		return "PurchaseItem [id=" + id + ", purchase=" + purchase.getId() + ", product=" + product.getId() + ", quantity=" + quantity
+				+ ",\nquantity_average=" + quantity_average + ", last_quantity=" + last_quantity + ", price_total="
+				+ price_total + ",\nprice_average=" + price_average + ", last_price=" + last_price + "]";
 	}
 	
 	
