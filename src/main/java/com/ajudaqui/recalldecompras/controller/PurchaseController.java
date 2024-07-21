@@ -15,6 +15,7 @@ import com.ajudaqui.recalldecompras.dto.response.ApiPurchase;
 import com.ajudaqui.recalldecompras.entity.Purchase;
 import com.ajudaqui.recalldecompras.exception.ApiException;
 import com.ajudaqui.recalldecompras.exception.MsgException;
+import com.ajudaqui.recalldecompras.exception.NotFoundEntityException;
 import com.ajudaqui.recalldecompras.service.PurchaseService;
 
 @RestController
@@ -25,12 +26,16 @@ public class PurchaseController {
 	private PurchaseService purchaseService;
 
 	@PostMapping()
-	public ResponseEntity<?> register(@RequestHeader("name") String name, @RequestHeader("jwt") String jwt) {
+	public ResponseEntity<?> newPurchase(@RequestHeader("name") String name, @RequestHeader("jwt") String jwt) {
 		try {
 			Purchase product = purchaseService.newPurchase(name, jwt);
 			return new ResponseEntity<>(new ApiPurchase(product), HttpStatus.CREATED);
 
 		} catch (MsgException e) {
+			return new ApiException().response(e, HttpStatus.BAD_REQUEST);
+		} catch (NotFoundEntityException e) {
+			return new ApiException().response(e, HttpStatus.BAD_REQUEST);
+		} catch (Exception e) {
 			return new ApiException().response(e, HttpStatus.BAD_REQUEST);
 		}
 
@@ -40,14 +45,17 @@ public class PurchaseController {
 	public ResponseEntity<?> findById(@PathVariable("id") Long id) {
 		try {
 			Purchase product = purchaseService.findById(id);
-//			return new ResponseEntity<>(new ApiPurchase(product), HttpStatus.CREATED);
-			System.out.println(product.toString());
-			return new ResponseEntity<>("ha!", HttpStatus.CREATED);
+			return new ResponseEntity<>(new ApiPurchase(product), HttpStatus.CREATED);
 
 		} catch (MsgException e) {
 			return new ApiException().response(e, HttpStatus.BAD_REQUEST);
 		}
 
+		catch (NotFoundEntityException e) {
+			return new ApiException().response(e, HttpStatus.BAD_REQUEST);
+		} catch (Exception e) {
+			return new ApiException().response(e, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 }

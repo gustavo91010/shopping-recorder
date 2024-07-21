@@ -16,7 +16,7 @@ public interface AuthenticationClient {
 
 	
 	@GetMapping("/users/jwt")
-	public UsersDTO findByJwt(@RequestHeader("Authorization") String jwtToken);
+	public UsersDTO findByJwt(@RequestHeader("Authorization") String jwt);
 	
 	
 	@PostMapping("/auth/signin")

@@ -14,15 +14,11 @@ import feign.FeignException;
 public class UsersService {
 	Logger logger= LoggerFactory.getLogger(UsersService.class);
 	
-//	
-//	@Autowired
-//	private UserService authenticationService;
-	
 	@Autowired	
 	AuthenticationClient authenticationClient;
 	
 	public UsersDTO findByJwt(String jwt) {
-		logger.info("Buscando usuario pelo jwt");
+		logger.info("Buscando usuario pelo jwt hum...");
 		try {
 			
 			return authenticationClient.findByJwt(jwt);

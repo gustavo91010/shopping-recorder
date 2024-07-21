@@ -18,7 +18,7 @@ import com.ajudaqui.recalldecompras.repository.PurchaseRepository;
 
 @Service
 public class PurchaseService {
-	Logger logger= LoggerFactory.getLogger(PurchaseService.class);
+	Logger logger = LoggerFactory.getLogger(PurchaseService.class);
 
 	@Autowired
 	private PurchaseRepository purchaseRepository;
@@ -26,20 +26,26 @@ public class PurchaseService {
 	@Autowired
 	private UsersService usersService;
 
-	public Purchase newPurchase(String  name, String jwt) {
+	public Purchase newPurchase(String name, String jwt) {
 		UsersDTO user = usersService.findByJwt(jwt);
-		if(user == null) {
+		if (user == null) {
 			throw new MsgException("Usuário não encontrado");
 		}
-		Purchase purchase = new Purchase(name,user.getId());
-		
+		System.out.println("tem? "+!purchaseRepository.findByName(name).isEmpty());
+		if(!purchaseRepository.findByName(name).isEmpty()) {
+			String msg="Este nome já esta em uso.";
+			logger.warn(msg);
+			throw new MsgException(msg);
+		}
+		Purchase purchase = new Purchase(name, user.getId());
+
 		purchase = purchaseRepository.save(purchase);
 		logger.info("Iniciando nova compra.");
-
 
 		return purchase;
 
 	}
+
 //	shopping_recorder
 	// clonagem do historico de compras
 	public Purchase shoppingClone(Long userId, Long purchaseId) {
@@ -73,7 +79,6 @@ public class PurchaseService {
 
 	}
 
-
 	public Purchase attPurchase(Purchase purchase) {
 		purchase = purchaseRepository.save(purchase);
 		return purchase;
@@ -89,6 +94,16 @@ public class PurchaseService {
 			total = total.add(item.getTotalValue());
 		}
 		return total;
+	}
+
+	private Purchase findByName(String name) {
+		Optional<Purchase> purchase = purchaseRepository.findByName(name);
+		if (purchase.isEmpty()) {
+			String msg="Compra não encontrada";
+			logger.warn(msg);
+			throw new NotFoundEntityException(msg);
+		}
+		return purchase.get();
 	}
 
 }
