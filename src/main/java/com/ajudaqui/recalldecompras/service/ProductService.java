@@ -19,6 +19,7 @@ import com.ajudaqui.recalldecompras.exception.NotFoundEntityException;
 import com.ajudaqui.recalldecompras.repository.ProductRepository;
 import com.ajudaqui.recalldecompras.service.model.ProductVO;
 import com.ajudaqui.recalldecompras.utils.Validation;
+import com.ajudaqui.recalldecompras.utils.enuns.EMeasurementUnit;
 
 @Service
 public class ProductService {
@@ -42,7 +43,8 @@ public class ProductService {
 		Product product = new Product();
 		product.setName(registerProductDto.getName());
 		product.setBrand(registerProductDto.getBrand());
-		product.setMeasurement_unit(registerProductDto.getMeasurement_unit());
+		System.out.println();
+		product.setMeasurement_unit(EMeasurementUnit.valueOf(registerProductDto.getMeasurement_unit().toUpperCase()).toString());
 		product.setQuantity(registerProductDto.getQuantity());
 
 		product.setPrice(registerProductDto.getPrice());

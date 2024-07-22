@@ -49,19 +49,6 @@ public class ProductController {
 
 	}
 
-//	public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-//		try {
-//		LoginResponse userAuthenticated = authenticationService.authenticateUser(loginRequest);
-//
-//		logger.info("Solocitação de login recebida com sucesso");
-//		return ResponseEntity.ok(userAuthenticated);
-//
-//		} catch (Exception e) {
-//			String msg="Login / senha incorreto";
-//			logger.warn(msg);
-//			return new ApiException().response(msg, HttpStatus.UNAUTHORIZED);
-//		}
-//	}
 	@Transactional
 	@GetMapping("/id/{id}")
 	public Product findById(@PathVariable("id") Long id) {
