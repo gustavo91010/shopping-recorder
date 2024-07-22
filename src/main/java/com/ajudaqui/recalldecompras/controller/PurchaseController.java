@@ -28,7 +28,7 @@ public class PurchaseController {
 	private PurchaseService purchaseService;
 
 	@PostMapping()
-	public ResponseEntity<?> newPurchase(@RequestHeader("name") String name, @RequestHeader("jwt") String jwt) {
+	public ResponseEntity<?> newPurchase(@RequestHeader("name") String name, @RequestHeader("authorization") String jwt) {
 		try {
 			Purchase product = purchaseService.newPurchase(name, jwt);
 			return new ResponseEntity<>(new ApiPurchase(product), HttpStatus.CREATED);

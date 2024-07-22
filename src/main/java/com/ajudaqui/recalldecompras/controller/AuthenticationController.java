@@ -14,6 +14,7 @@ import com.ajudaqui.recalldecompras.client.dto.LoginRequest;
 import com.ajudaqui.recalldecompras.client.dto.LoginResponse;
 import com.ajudaqui.recalldecompras.client.dto.UsersRegister;
 import com.ajudaqui.recalldecompras.dto.response.MessageResponse;
+import com.ajudaqui.recalldecompras.exception.ApiException;
 import com.ajudaqui.recalldecompras.service.AuthenticationService;
 
 @RestController
@@ -23,23 +24,23 @@ public class AuthenticationController {
 
 	@Autowired
 	private AuthenticationService authenticationService;
-	
+
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-//		try {
-			LoginResponse userAuthenticated = authenticationService.authenticateUser(loginRequest);
+		try {
+		LoginResponse userAuthenticated = authenticationService.authenticateUser(loginRequest);
 
-			logger.info("Solocitação de login recebida com sucesso");
-			return ResponseEntity.ok(userAuthenticated);
+		logger.info("Solocitação de login recebida com sucesso");
+		return ResponseEntity.ok(userAuthenticated);
 
-//		} catch (Exception e) {
-//			String msg="Login / senha incorreto";
-//			logger.error("Solocitação de login recusada por motivo de: " + msg);
-//
-//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(msg);
-//		}
+		} catch (Exception e) {
+			String msg="Login / senha incorreto";
+			logger.error("Solocitação de login recusada por motivo de: " + msg);
+
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(msg);
+		}
 	}
-	
+
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@RequestBody UsersRegister usersRegister) {
 
@@ -49,10 +50,11 @@ public class AuthenticationController {
 			return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 
 		} catch (Exception e) {
-			logger.warn(
-					String.format("Problema ao registrar o email %s, %s", usersRegister.getEmail(), e.getMessage()));
-			System.out.println(e.getMessage());
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+			String msg = String.format("Problema ao registrar o email %s, %s", usersRegister.getEmail(),
+					e.getMessage());
+			logger.warn(msg);
+			return new ApiException().response(msg, HttpStatus.UNAUTHORIZED);
+//					ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 		}
 	}
 
