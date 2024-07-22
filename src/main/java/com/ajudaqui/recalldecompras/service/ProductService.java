@@ -18,6 +18,7 @@ import com.ajudaqui.recalldecompras.exception.MsgException;
 import com.ajudaqui.recalldecompras.exception.NotFoundEntityException;
 import com.ajudaqui.recalldecompras.repository.ProductRepository;
 import com.ajudaqui.recalldecompras.service.model.ProductVO;
+import com.ajudaqui.recalldecompras.utils.Validation;
 
 @Service
 public class ProductService {
@@ -27,11 +28,12 @@ public class ProductService {
 	private ProductRepository productRepository;
 
 	public Product registration(RegisterProductDTO registerProductDto) {
-		if (productIsRegisteder(registerProductDto.getName(), registerProductDto.getBrand())) {
-			String msg = format("Produto %s já cadastrado da marca %s.", registerProductDto.getName(),
-					registerProductDto.getBrand());
-			logger.info(msg);
 
+		Validation.isPresencialValues(registerProductDto);
+
+		if (productIsRegisteder(registerProductDto.getName(), registerProductDto.getBrand())) {
+			String msg = format("Produto %s da marca %s já cadastrado.", registerProductDto.getName(),
+					registerProductDto.getBrand());
 			throw new MsgException(msg);
 		}
 		logger.info(format("Registrando produto %s da marca %s.", registerProductDto.getName(),

@@ -35,9 +35,8 @@ public class AuthenticationController {
 
 		} catch (Exception e) {
 			String msg="Login / senha incorreto";
-			logger.error("Solocitação de login recusada por motivo de: " + msg);
-
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(msg);
+			logger.warn(msg);
+			return new ApiException().response(msg, HttpStatus.UNAUTHORIZED);
 		}
 	}
 
