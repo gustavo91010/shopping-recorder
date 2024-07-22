@@ -10,8 +10,8 @@ import com.ajudaqui.recalldecompras.entity.Purchase;
 
 public interface PurchaseRepository extends JpaRepository<Purchase, Long>{
 
-	@Query(value="select * from purchases where users_id= :userId ", nativeQuery = true)
-	List<Purchase> findAllByUsers(Long userId);
+	@Query(value="select * from purchases where user_id= :user_id ", nativeQuery = true)
+	List<Purchase> findAllByUsers(Long user_id);
 	
 	Optional<Purchase> findByName(String name);
 

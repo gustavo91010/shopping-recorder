@@ -31,9 +31,8 @@ public class PurchaseService {
 		if (user == null) {
 			throw new MsgException("Usuário não encontrado");
 		}
-		System.out.println("tem? "+!purchaseRepository.findByName(name).isEmpty());
-		if(!purchaseRepository.findByName(name).isEmpty()) {
-			String msg="Este nome já esta em uso.";
+		if (!purchaseRepository.findByName(name).isEmpty()) {
+			String msg = "Este nome já esta em uso.";
 			logger.warn(msg);
 			throw new MsgException(msg);
 		}
@@ -43,12 +42,11 @@ public class PurchaseService {
 		logger.info("Iniciando nova compra.");
 
 		return purchase;
-
 	}
 
 //	shopping_recorder
 	// clonagem do historico de compras
-	public Purchase shoppingClone(Long userId, Long purchaseId) {
+	private Purchase shoppingClone(Long userId, Long purchaseId) {
 		if (!purchasePertenceUser(userId, purchaseId)) {
 			throw new NotFoundEntityException("Compra não localizada.");
 		}
@@ -60,32 +58,34 @@ public class PurchaseService {
 	}
 
 	public Purchase findById(Long id) {
-		Optional<Purchase> purchase = purchaseRepository.findById(id);
+//		Optional<Purchase> purchase = purchaseRepository.findById(id);
 //		if (purchase.isEmpty()) {
 //			throw new NotFoundEntityException("Compra não localizada.");
 //		}
-//
-//		return purchase.get();
-		return purchase.get();
+		Purchase purchase = purchaseRepository.findById(id)
+				.orElseThrow(() -> new NotFoundEntityException("Compra não localizada."));
+		return purchase;
 	}
 
-	public boolean purchasePertenceUser(Long userId, Long purchaseId) {
+	private boolean purchasePertenceUser(Long userId, Long purchaseId) {
 		Purchase purchase = findById(purchaseId);
 		return purchase.getUser_id() == userId;
 	}
 
-	private List<Purchase> findAllByUsers(Long userId) {
-		return purchaseRepository.findAllByUsers(userId);
+	public List<Purchase> findAllByUsers(String jwt) {
+		UsersDTO user = usersService.findByJwt(jwt);
+		logger.warn("Todas as compras do user: " + user.getId());
 
+		return purchaseRepository.findAllByUsers(user.getId());
 	}
 
-	public Purchase attPurchase(Purchase purchase) {
+	private Purchase attPurchase(Purchase purchase) {
 		purchase = purchaseRepository.save(purchase);
 		return purchase;
 
 	}
 
-	public BigDecimal totalPrice(Long id) {
+	private BigDecimal totalPrice(Long id) {
 		Purchase purchase = findById(id);
 
 		BigDecimal total = BigDecimal.ZERO;
@@ -96,12 +96,20 @@ public class PurchaseService {
 		return total;
 	}
 
-	private Purchase findByName(String name) {
+	public Purchase findByName(String name, String jwt) {
 		Optional<Purchase> purchase = purchaseRepository.findByName(name);
 		if (purchase.isEmpty()) {
-			String msg="Compra não encontrada";
+			String msg = "Compra não encontrada";
 			logger.warn(msg);
 			throw new NotFoundEntityException(msg);
+		}
+		UsersDTO user = usersService.findByJwt(jwt);
+		logger.warn(String.format("Solicitando compra: %s do user %d .", name, user.getId()));
+
+		if (user.getId() != purchase.get().getUser_id()) {
+			String msg = "Não autorizado";
+			logger.warn(msg);
+			throw new MsgException(msg);
 		}
 		return purchase.get();
 	}

@@ -5,6 +5,7 @@ import com.ajudaqui.recalldecompras.entity.Purchase;
 public class ApiPurchase {
 	private Purchase purchase;
 
+
 	public ApiPurchase(Purchase purchase) {
 		super();
 		this.purchase = purchase;
@@ -17,6 +18,7 @@ public class ApiPurchase {
 	public void setPurchase(Purchase purchase) {
 		this.purchase = purchase;
 	}
+
 	
 
 
