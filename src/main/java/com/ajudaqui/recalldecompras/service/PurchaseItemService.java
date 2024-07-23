@@ -139,16 +139,16 @@ public class PurchaseItemService {
 	}
 	private Product findOldOrRegisterNewProduct(PurchaseItemVO purchaseItemVO) {
 		Product procudt= new Product();
-		try {
-			procudt = procudService.findSpecificProduct(purchaseItemVO.getName(), purchaseItemVO.getBrand());
-		} catch (MsgException e) {
-
-			RegisterProductDTO registerProductDto = new RegisterProductDTO(purchaseItemVO.getName(),
-					purchaseItemVO.getBrand(), purchaseItemVO.getMeasurement_unit(),
-					purchaseItemVO.getQuantity_product(), purchaseItemVO.getPrice());
-
-			procudt = procudService.registration(registerProductDto);
-		}
+//		try {
+//			procudt = procudService.findSpecificProduct(purchaseItemVO.getName(), purchaseItemVO.getBrand());
+//		} catch (MsgException e) {
+//
+//			RegisterProductDTO registerProductDto = new RegisterProductDTO(purchaseItemVO.getName(),
+//					purchaseItemVO.getBrand(), purchaseItemVO.getMeasurement_unit(),
+//					purchaseItemVO.getQuantity_product(), purchaseItemVO.getPrice());
+//
+//			procudt = procudService.registration(registerProductDto);
+//		}
 		return procudt;
 	}
 

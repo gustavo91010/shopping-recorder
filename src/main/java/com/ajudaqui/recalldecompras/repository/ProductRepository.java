@@ -1,7 +1,6 @@
 package com.ajudaqui.recalldecompras.repository;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,5 +16,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	List<Product> findByBrand(String brand);
 
 	@Query(value = "SELECT * FROM products WHERE name = :name AND brand = :brand ", nativeQuery = true)
-	Optional<Product> findSpecificProduct(String name, String brand);
+//	Optional<Product> findSpecificProduct(String name, String brand);
+	List<Product> findSpecificProduct(String name, String brand);
 }

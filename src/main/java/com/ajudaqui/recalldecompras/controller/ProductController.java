@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ajudaqui.recalldecompras.dto.RegisterProductDTO;
+import com.ajudaqui.recalldecompras.dto.response.ApiMessage;
 import com.ajudaqui.recalldecompras.dto.response.ApiProduct;
+import com.ajudaqui.recalldecompras.dto.response.ApiProducts;
 import com.ajudaqui.recalldecompras.entity.Product;
 import com.ajudaqui.recalldecompras.exception.ApiException;
 import com.ajudaqui.recalldecompras.service.ProductService;
@@ -72,7 +75,23 @@ public class ProductController {
 	public ResponseEntity<?> findByName(@PathVariable("name") String name) {
 		logger.info(format("Buscando produto: %s", name));
 		try {
-			 List<Product> products = productService.findByName(name);
+			List<Product> products = productService.findByName(name);
+
+			return new ResponseEntity<>(new ApiProducts(products), HttpStatus.CREATED);
+
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			return new ApiException().response(e, HttpStatus.UNAUTHORIZED);
+		}
+
+	}
+
+	@Transactional
+	@GetMapping("/brand/{brand}")
+	public ResponseEntity<?> findByBrand(@PathVariable("brand") String brand) {
+		logger.info(format("Buscando pela marca: %s", brand));
+		try {
+			List<Product> products = productService.findByBrand(brand);
 
 			return new ResponseEntity<>(new ApiProducts(products), HttpStatus.CREATED);
 
@@ -83,19 +102,19 @@ public class ProductController {
 
 	}
 	@Transactional
-	@GetMapping("/brand/{brand}")
-	public ResponseEntity<?> findByBrand(@PathVariable("brand") String brand) {
-		logger.info(format("Buscando pela marca: %s", brand));
+	@GetMapping("/all")
+	public ResponseEntity<?> findAll(@RequestParam("name") String name, @RequestParam("brand") String brand) {
+		logger.info(format("Buscando produto"));
 		try {
-			 List<Product> products = productService.findByBrand(brand);
-
+			List<Product> products = productService.findAll(name, brand);
+			
 			return new ResponseEntity<>(new ApiProducts(products), HttpStatus.CREATED);
-
+			
 		} catch (Exception e) {
 			logger.warn(e.getMessage());
 			return new ApiException().response(e, HttpStatus.UNAUTHORIZED);
 		}
-
+		
 	}
 
 	@PutMapping("/update/{id}")
@@ -103,7 +122,7 @@ public class ProductController {
 		logger.info(format("Buscando produto de id %d para atualizae", id));
 
 		try {
-			Product product =	productService.update(id, productUpdate);
+			Product product = productService.update(id, productUpdate);
 
 			return new ResponseEntity<>(new ApiProduct(product), HttpStatus.CREATED);
 
@@ -114,8 +133,35 @@ public class ProductController {
 	}
 
 	@PutMapping("/change-price/{id}")
-	public void changePrice(@PathVariable("id") Long id, @RequestParam("price") double price) {
-		productService.changePrice(id, price);
+	public ResponseEntity<?> changePrice(@PathVariable("id") Long id, @RequestParam("price") double price) {
+
+		logger.info(format("Buscando produto de id %d para atualizae", id));
+
+		try {
+			Product product = productService.changePrice(id, price);
+
+			return new ResponseEntity<>(new ApiProduct(product), HttpStatus.CREATED);
+
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			return new ApiException().response(e, HttpStatus.UNAUTHORIZED);
+		}
+	}
+	
+	@Transactional
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+		logger.info(format("removendo produto de id %d", id));
+		try {
+			 productService.delete(id);
+
+			return new ResponseEntity<>(new ApiMessage(format("Produto de id %d removido com sucesso.", id)), HttpStatus.CREATED);
+
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			return new ApiException().response(e, HttpStatus.UNAUTHORIZED);
+		}
+
 	}
 
 }

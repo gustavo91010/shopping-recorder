@@ -43,8 +43,7 @@ public class ProductService {
 		Product product = new Product();
 		product.setName(registerProductDto.getName().toLowerCase());
 		product.setBrand(registerProductDto.getBrand().toLowerCase());
-		product.setMeasurement_unit(
-				EMeasurementUnit.findByName(registerProductDto.getMeasurement_unit()));
+		product.setMeasurement_unit(EMeasurementUnit.findByName(registerProductDto.getMeasurement_unit()));
 		product.setQuantity(registerProductDto.getQuantity());
 
 		product.setPrice(registerProductDto.getPrice());
@@ -54,16 +53,26 @@ public class ProductService {
 
 	}
 
-	public Product findById(Long id) {
-		
-
-		Optional<Product> product = productRepository.findById(id);
-
-		if (!product.isPresent()) {
-
-			throw new NotFoundEntityException("Produto não encontrado");
+	public List<Product> findAll(String name, String brand) {
+		boolean isName = !name.isEmpty() && brand.isEmpty();
+		boolean isBrand = name.isEmpty() && !brand.isEmpty();
+		boolean isEspecifique = !name.isEmpty() && !brand.isEmpty();
+		if (isName) {
+			return findByName(name);
 		}
-		return product.get();
+		if (isBrand) {
+			return findByBrand(brand);
+		}
+		if (isEspecifique) {
+			return findSpecificProduct(name, brand);
+		}
+
+		return productRepository.findAll();
+	}
+
+	public Product findById(Long id) {
+
+		return productRepository.findById(id).orElseThrow(() -> new NotFoundEntityException("Produto não encontrado"));
 	}
 
 	public List<Product> findByName(String name) {
@@ -74,7 +83,7 @@ public class ProductService {
 		}
 		return products;
 	}
-	
+
 	public List<Product> findByBrand(String brand) {
 
 		List<Product> products = productRepository.findByBrand(brand);
@@ -86,19 +95,10 @@ public class ProductService {
 
 	}
 
-	public Product findSpecificProduct(String name, String brand) {
-		logger.info(format("Buscando produto %s da marca %s", name, brand));
-
-		Optional<Product> product = productRepository.findSpecificProduct(name.toLowerCase(), brand.toLowerCase());
-		if (product.isEmpty()) {
-			String msg = "Nenhum produto com esse nome foi encontrado";
-			logger.warn(msg);
-			throw new MsgException(msg);
-		}
-		return product.get();
+	public List<Product> findSpecificProduct(String name, String brand) {
+		List<Product> product = productRepository.findSpecificProduct(name.toLowerCase(), brand.toLowerCase());
+		return product;
 	}
-
-
 
 	public boolean productIsRegisteder(String name, String brand) {
 		List<Product> sameName = productRepository.findByName(name);
@@ -135,11 +135,9 @@ public class ProductService {
 	}
 
 	public void delete(Long id) {
-		logger.info(format("Excluindo produto id %d", id));
-
-		productRepository.deleteById(id);
+		productRepository.delete(findById(id));
 	}
-	
+
 	private Product save(Product product) {
 		logger.info(format("Produto atualizado / registrado com sucesso!"));
 		product.setUpdated_at(LocalDateTime.now());
