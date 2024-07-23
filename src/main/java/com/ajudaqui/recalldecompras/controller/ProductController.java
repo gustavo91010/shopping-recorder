@@ -1,5 +1,7 @@
 package com.ajudaqui.recalldecompras.controller;
 
+import static java.lang.String.format;
+
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -36,10 +38,10 @@ public class ProductController {
 
 	@PostMapping
 	@Transactional
-	public ResponseEntity<?> register(@Valid @RequestBody RegisterProductDTO usersDto) {
+	public ResponseEntity<?> register(@RequestBody RegisterProductDTO usersDto) {
 		try {
 			Product product = productService.registration(usersDto);
-			
+
 			return new ResponseEntity<>(new ApiProduct(product), HttpStatus.CREATED);
 
 		} catch (Exception e) {
@@ -51,40 +53,69 @@ public class ProductController {
 
 	@Transactional
 	@GetMapping("/id/{id}")
-	public Product findById(@PathVariable("id") Long id) {
-		return productService.findById(id);
+	public ResponseEntity<?> findById(@PathVariable("id") Long id) {
+		logger.info(format("Buscando produto de id %d", id));
+		try {
+			Product product = productService.findById(id);
+
+			return new ResponseEntity<>(new ApiProduct(product), HttpStatus.CREATED);
+
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			return new ApiException().response(e, HttpStatus.UNAUTHORIZED);
+		}
 
 	}
 
 	@Transactional
 	@GetMapping("/name/{name}")
-	public List<Product> findByName(@PathVariable("name") String name) {
-		return productService.findByName(name);
+	public ResponseEntity<?> findByName(@PathVariable("name") String name) {
+		logger.info(format("Buscando produto: %s", name));
+		try {
+			 List<Product> products = productService.findByName(name);
+
+			return new ResponseEntity<>(new ApiProducts(products), HttpStatus.CREATED);
+
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			return new ApiException().response(e, HttpStatus.UNAUTHORIZED);
+		}
 
 	}
-
 	@Transactional
 	@GetMapping("/brand/{brand}")
-	public List<Product> findByBrand(@PathVariable("brand") String brand) {
-		return productService.findByBrand(brand);
+	public ResponseEntity<?> findByBrand(@PathVariable("brand") String brand) {
+		logger.info(format("Buscando pela marca: %s", brand));
+		try {
+			 List<Product> products = productService.findByBrand(brand);
+
+			return new ResponseEntity<>(new ApiProducts(products), HttpStatus.CREATED);
+
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			return new ApiException().response(e, HttpStatus.UNAUTHORIZED);
+		}
 
 	}
 
 	@PutMapping("/update/{id}")
-	public void update(@PathVariable("id") Long id, @RequestBody ProductVO productUpdate) {
-		productService.update(id, productUpdate);
+	public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody ProductVO productUpdate) {
+		logger.info(format("Buscando produto de id %d para atualizae", id));
+
+		try {
+			Product product =	productService.update(id, productUpdate);
+
+			return new ResponseEntity<>(new ApiProduct(product), HttpStatus.CREATED);
+
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			return new ApiException().response(e, HttpStatus.UNAUTHORIZED);
+		}
 	}
 
 	@PutMapping("/change-price/{id}")
 	public void changePrice(@PathVariable("id") Long id, @RequestParam("price") double price) {
 		productService.changePrice(id, price);
-	}
-
-	@Transactional
-	@GetMapping("/test/{name}")
-	public String test(@PathVariable("name") String name) {
-		return "ola teste: " + name;
-
 	}
 
 }

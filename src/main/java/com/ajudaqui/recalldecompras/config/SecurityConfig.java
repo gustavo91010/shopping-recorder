@@ -20,6 +20,9 @@ public class SecurityConfig {
                 authorizeRequests
                     .antMatchers(HttpMethod.GET, "/**").permitAll()
                     .antMatchers(HttpMethod.POST, "/**").permitAll()
+                    .antMatchers(HttpMethod.PUT, "/**").permitAll()
+                    .antMatchers(HttpMethod.DELETE, "/**").permitAll()
+
                     .anyRequest().authenticated()
             );
         return http.build();

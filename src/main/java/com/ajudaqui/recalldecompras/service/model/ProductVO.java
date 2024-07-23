@@ -5,7 +5,8 @@ import java.math.BigDecimal;
 public class ProductVO {
 	private String name;
 	private String brand;
-	private String average_unit;
+	private String measurement_unit;
+	private Double quantity;
 	private BigDecimal price;
 	public String getName() {
 		return name;
@@ -19,17 +20,23 @@ public class ProductVO {
 	public void setBrand(String brand) {
 		this.brand = brand;
 	}
-	public String getAverage_unit() {
-		return average_unit;
-	}
-	public void setAverage_unit(String average_unit) {
-		this.average_unit = average_unit;
-	}
 	public BigDecimal getPrice() {
 		return price;
 	}
 	public void setPrice(BigDecimal price) {
 		this.price = price;
+	}
+	public String getMeasurement_unit() {
+		return measurement_unit;
+	}
+	public void setMeasurement_unit(String measurement_unit) {
+		this.measurement_unit = measurement_unit;
+	}
+	public Double getQuantity() {
+		return quantity;
+	}
+	public void setQuantity(Double quantity) {
+		this.quantity = quantity;
 	}
 	
 

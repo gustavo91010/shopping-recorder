@@ -4,8 +4,6 @@ import com.ajudaqui.recalldecompras.entity.Product;
 
 public class ApiProduct {
 	private Product product;
-	
-
 
 
 	public ApiProduct(Product product) {

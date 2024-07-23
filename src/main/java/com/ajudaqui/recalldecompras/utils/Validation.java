@@ -20,5 +20,29 @@ public class Validation {
 			}
 		}
 	}
+	
+	public static <T,U> T update(T myObject, U objectUpdate) {
+		Field[] myFields = myObject.getClass().getDeclaredFields();
+		Field[] updateFields = objectUpdate.getClass().getDeclaredFields();
+		
+		
+		for (Field updateField : updateFields) {
+			updateField.setAccessible(true);
+			try {
+	            Object atribute = updateField.get(objectUpdate);
+				if (atribute != null && !atribute.toString().isEmpty()) {
+					for (Field myField : myFields) {
 
+						if(updateField.getName().equals(myField.getName())) {
+							myField.setAccessible(true);
+							myField.set(myObject, atribute);//ele pega meu atributo, define classe e o valor
+						}
+					}
+				}
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		}
+		return myObject;
+	}
 }
