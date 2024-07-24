@@ -3,6 +3,8 @@ package com.ajudaqui.recalldecompras.service;
 import static java.lang.String.format;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -10,11 +12,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ajudaqui.recalldecompras.config.client.dto.UsersDTO;
 import com.ajudaqui.recalldecompras.dto.RegisterProductDTO;
+import com.ajudaqui.recalldecompras.dto.response.ApiPurchaseItem;
 import com.ajudaqui.recalldecompras.entity.Product;
 import com.ajudaqui.recalldecompras.entity.Purchase;
 import com.ajudaqui.recalldecompras.entity.PurchaseItem;
 import com.ajudaqui.recalldecompras.exception.MsgException;
+import com.ajudaqui.recalldecompras.exception.NotFoundEntityException;
 import com.ajudaqui.recalldecompras.repository.PurchaseItensRepository;
 import com.ajudaqui.recalldecompras.service.model.PurchaseItemVO;
 import com.ajudaqui.recalldecompras.service.model.UpdateItemPurchaseVO;
@@ -32,18 +37,23 @@ public class PurchaseItemService {
 	@Autowired
 	private ProductService procudService;
 
-	public Purchase newItem(PurchaseItemVO purchaseItemVO) {
+	@Autowired
+	private UsersService usersService;
+
+	public Purchase newItem(String jwtToken, PurchaseItemVO purchaseItemVO) {
+
+		Purchase purchase = purchaseService.findById(purchaseItemVO.getPurchaseId());
+		myPurchase(jwtToken, purchase);
+
 		logger.info(format("Adicionando produto %s a compra id %d", purchaseItemVO.getName(),
 				purchaseItemVO.getPurchaseId()));
-		Purchase purchase = purchaseService.findById(purchaseItemVO.getPurchaseId());
 
 		Product procudt = findOldOrRegisterNewProduct(purchaseItemVO);
-
 
 		// Verificar se o produto já existe na lista, incrementa
 		for (PurchaseItem item : purchase.getItems()) {
 			if (item.getProduct().equals(procudt)) {
-				logger.info(format("Incrementando item já existente na lista"));
+				logger.info(format("Incrementando item já existente"));
 
 				Double quantityItem = item.getQuantity();
 				quantityItem = quantityItem + purchaseItemVO.getQuantity_items();
@@ -58,7 +68,7 @@ public class PurchaseItemService {
 		}
 
 		PurchaseItem item = new PurchaseItem(purchase, procudt, purchaseItemVO.getQuantity_items());
-		logger.info(format("Criando novo item."));
+		logger.info(format("Adicioando novo item."));
 
 		item = purchaseItemRepository.save(item);
 		purchase.getItems().add(item);
@@ -66,7 +76,7 @@ public class PurchaseItemService {
 		return purchase;
 	}
 
-
+	
 
 	private PurchaseItem findById(Long id) {
 		Optional<PurchaseItem> item = purchaseItemRepository.findById(id);
@@ -74,9 +84,19 @@ public class PurchaseItemService {
 			throw new MsgException("Item não encontrado");
 		}
 		return item.get();
-
 	}
-
+//	private PurchaseItem findByName(String name) {
+//		Optional<PurchaseItem> item = purchaseItemRepository.findByName(name);
+//		if (item.isEmpty()) {
+//			throw new MsgException("Item não encontrado");
+//		}
+//		return item.get();
+//	}
+	public ApiPurchaseItem findAll(String jwtToken, String purchaseName) {
+		Purchase purchase = purchaseService.findByName(purchaseName,jwtToken);
+		
+		return new ApiPurchaseItem(purchase.getId(), purchaseName, purchase.getItems());
+	}
 	// Atualizando total item
 	private BigDecimal attTotalPrice(Double quanrity, BigDecimal price) {
 		return price.multiply(new BigDecimal(quanrity));
@@ -137,19 +157,32 @@ public class PurchaseItemService {
 	private void delete(Long id) {
 		purchaseItemRepository.deleteById(id);
 	}
+
 	private Product findOldOrRegisterNewProduct(PurchaseItemVO purchaseItemVO) {
-		Product procudt= new Product();
-//		try {
-//			procudt = procudService.findSpecificProduct(purchaseItemVO.getName(), purchaseItemVO.getBrand());
-//		} catch (MsgException e) {
-//
-//			RegisterProductDTO registerProductDto = new RegisterProductDTO(purchaseItemVO.getName(),
-//					purchaseItemVO.getBrand(), purchaseItemVO.getMeasurement_unit(),
-//					purchaseItemVO.getQuantity_product(), purchaseItemVO.getPrice());
-//
-//			procudt = procudService.registration(registerProductDto);
-//		}
+		Product procudt = new Product();
+		try {
+			List<Product> products = procudService.findSpecificProduct(purchaseItemVO.getName(),
+					purchaseItemVO.getBrand());
+			//pega o ultimo a ser criado	
+			procudt = products.stream().max(Comparator.comparing(Product::getCreated_at))
+					.orElseThrow(() -> new NotFoundEntityException("Produto não encontrado"));
+		} catch (MsgException e) {
+
+			RegisterProductDTO registerProductDto = new RegisterProductDTO(purchaseItemVO.getName(),
+					purchaseItemVO.getBrand(), purchaseItemVO.getMeasurement_unit(),
+					purchaseItemVO.getQuantity_product(), purchaseItemVO.getPrice());
+
+			procudt = procudService.registration(registerProductDto);
+		}
 		return procudt;
+	}
+
+	private UsersDTO myPurchase(String jwtToken, Purchase purchase) {
+		UsersDTO user = usersService.findByJwt(jwtToken);
+		if (purchase.getUser_id().equals(user.getId())) {
+			throw new MsgException("Não autorizado.");
+		}
+		return user;
 	}
 
 }

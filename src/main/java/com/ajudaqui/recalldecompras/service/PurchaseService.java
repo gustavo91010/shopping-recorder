@@ -58,10 +58,6 @@ public class PurchaseService {
 	}
 
 	public Purchase findById(Long id) {
-//		Optional<Purchase> purchase = purchaseRepository.findById(id);
-//		if (purchase.isEmpty()) {
-//			throw new NotFoundEntityException("Compra não localizada.");
-//		}
 		Purchase purchase = purchaseRepository.findById(id)
 				.orElseThrow(() -> new NotFoundEntityException("Compra não localizada."));
 		return purchase;
@@ -110,6 +106,15 @@ public class PurchaseService {
 			String msg = "Não autorizado";
 			logger.warn(msg);
 			throw new MsgException(msg);
+		}
+		return purchase.get();
+	}
+	public Purchase findByName(String name) {
+		Optional<Purchase> purchase = purchaseRepository.findByName(name);
+		if (purchase.isEmpty()) {
+			String msg = "Compra não encontrada";
+			logger.warn(msg);
+			throw new NotFoundEntityException(msg);
 		}
 		return purchase.get();
 	}
