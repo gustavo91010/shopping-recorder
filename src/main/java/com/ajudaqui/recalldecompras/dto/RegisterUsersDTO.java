@@ -1,6 +1,6 @@
 package com.ajudaqui.recalldecompras.dto;
 
-import com.ajudaqui.recalldecompras.client.dto.UsersDTO;
+import com.ajudaqui.recalldecompras.config.client.dto.UsersDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class RegisterUsersDTO {

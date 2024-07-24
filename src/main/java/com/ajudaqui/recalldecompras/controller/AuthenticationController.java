@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ajudaqui.recalldecompras.client.dto.LoginRequest;
-import com.ajudaqui.recalldecompras.client.dto.LoginResponse;
-import com.ajudaqui.recalldecompras.client.dto.UsersRegister;
+import com.ajudaqui.recalldecompras.config.client.dto.LoginRequest;
+import com.ajudaqui.recalldecompras.config.client.dto.LoginResponse;
+import com.ajudaqui.recalldecompras.config.client.dto.UsersRegister;
 import com.ajudaqui.recalldecompras.dto.response.MessageResponse;
 import com.ajudaqui.recalldecompras.exception.ApiException;
 import com.ajudaqui.recalldecompras.service.AuthenticationService;
