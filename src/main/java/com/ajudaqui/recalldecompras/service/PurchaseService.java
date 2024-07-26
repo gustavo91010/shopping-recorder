@@ -31,14 +31,14 @@ public class PurchaseService {
 		if (user == null) {
 			throw new MsgException("Usuário não encontrado");
 		}
-		if (!purchaseRepository.findByName(name).isEmpty()) {
+		if (!purchaseRepository.findByName(name.replace(" ", "_")).isEmpty()) {
 			String msg = "Este nome já esta em uso.";
 			logger.warn(msg);
 			throw new MsgException(msg);
 		}
-		Purchase purchase = new Purchase(name, user.getId());
+		Purchase purchase = new Purchase(name.toLowerCase(), user.getId());
 
-		purchase = purchaseRepository.save(purchase);
+		purchase = save(purchase);
 		logger.info("Iniciando nova compra.");
 
 		return purchase;
@@ -76,12 +76,12 @@ public class PurchaseService {
 	}
 
 	private Purchase attPurchase(Purchase purchase) {
-		purchase = purchaseRepository.save(purchase);
+		purchase = save(purchase);
 		return purchase;
 
 	}
 
-	private BigDecimal totalPrice(Long id) {
+	public Purchase totalPrice(Long id) {
 		Purchase purchase = findById(id);
 
 		BigDecimal total = BigDecimal.ZERO;
@@ -89,19 +89,24 @@ public class PurchaseService {
 		for (PurchaseItem item : purchase.getItems()) {
 			total = total.add(item.getTotalValue());
 		}
-		return total;
+		System.out.println("total "+total);
+		System.out.println("total "+total);
+		System.out.println("total "+total);
+		purchase.setTotalValue(total);
+		return purchase;
 	}
 
 	public Purchase findByName(String name, String jwt) {
-		Optional<Purchase> purchase = purchaseRepository.findByName(name);
+
+		Optional<Purchase> purchase = purchaseRepository.findByName(name.replace(" ", "_"));
+//		Optional<Purchase> purchase = purchaseRepository.findByName(name);
 		if (purchase.isEmpty()) {
 			String msg = "Compra não encontrada";
 			logger.warn(msg);
 			throw new NotFoundEntityException(msg);
 		}
 		UsersDTO user = usersService.findByJwt(jwt);
-		logger.warn(String.format("Solicitando compra: %s do user %d .", name, user.getId()));
-
+		logger.info(String.format("verificando responsavel pela compra: %s .", name));
 		if (user.getId() != purchase.get().getUser_id()) {
 			String msg = "Não autorizado";
 			logger.warn(msg);
@@ -109,14 +114,20 @@ public class PurchaseService {
 		}
 		return purchase.get();
 	}
-	public Purchase findByName(String name) {
-		Optional<Purchase> purchase = purchaseRepository.findByName(name);
-		if (purchase.isEmpty()) {
-			String msg = "Compra não encontrada";
-			logger.warn(msg);
-			throw new NotFoundEntityException(msg);
-		}
-		return purchase.get();
+//	public Purchase findByName(String name) {
+//		Optional<Purchase> purchase = purchaseRepository.findByName(name);
+//		if (purchase.isEmpty()) {
+//			String msg = "Compra não encontrada";
+//			logger.warn(msg);
+//			throw new NotFoundEntityException(msg);
+//		}
+//		return purchase.get();
+//	}
+
+	public Purchase save(Purchase purchase) {
+		purchase.setName(purchase.getName().replace(" ", "_"));
+		return purchaseRepository.save(purchase);
+		
 	}
 
 }

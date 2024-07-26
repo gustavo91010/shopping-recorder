@@ -4,7 +4,7 @@ import com.ajudaqui.recalldecompras.exception.MsgException;
 
 public enum EMeasurementUnit {
 	KG("Quilograma"), G("Grama"), MG("Miligrama"), M("Metro"), CM("Centímetro"), MM("Milímetro"), L("Litro"),
-	ML("Mililitro");
+	ML("Mililitro"),U("Unidade");
 
 	private final String descricao;
 

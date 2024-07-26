@@ -3,6 +3,7 @@ package com.ajudaqui.recalldecompras.service;
 import static java.lang.String.format;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -41,15 +42,12 @@ public class PurchaseItemService {
 	private UsersService usersService;
 
 	public Purchase newItem(String jwtToken, PurchaseItemVO purchaseItemVO) {
-
-		Purchase purchase = purchaseService.findById(purchaseItemVO.getPurchaseId());
+		Purchase purchase = purchaseService.findByName(purchaseItemVO.getPurchase_name(), jwtToken);
 		myPurchase(jwtToken, purchase);
 
-		logger.info(format("Adicionando produto %s a compra id %d", purchaseItemVO.getName(),
-				purchaseItemVO.getPurchaseId()));
+		logger.info(format("Adicionando produto %s a compra id %d", purchaseItemVO.getName(), purchase.getId()));
 
 		Product procudt = findOldOrRegisterNewProduct(purchaseItemVO);
-
 		// Verificar se o produto já existe na lista, incrementa
 		for (PurchaseItem item : purchase.getItems()) {
 			if (item.getProduct().equals(procudt)) {
@@ -61,18 +59,23 @@ public class PurchaseItemService {
 				item.setQuantity(quantityItem);
 				item.setPrice_total(attTotalPrice(quantityItem, item.getProduct().getPrice()));
 
-				purchaseItemRepository.save(item);
-
-				return purchase;
+				return addItemInPurchase(purchase, item);
 			}
 		}
 
 		PurchaseItem item = new PurchaseItem(purchase, procudt, purchaseItemVO.getQuantity_items());
 		logger.info(format("Adicioando novo item."));
 
-		item = purchaseItemRepository.save(item);
-		purchase.getItems().add(item);
+		return addItemInPurchase(purchase, item);
+	}
 
+	private Purchase addItemInPurchase(Purchase purchase, PurchaseItem item) {
+		item = save(item);
+		purchase.getItems().add(item);
+		purchase.setUpdated_at(LocalDateTime.now());
+		purchase = purchaseService.totalPrice(purchase.getId());
+
+		purchaseService.save(purchase);
 		return purchase;
 	}
 
@@ -85,6 +88,7 @@ public class PurchaseItemService {
 		}
 		return item.get();
 	}
+
 //	private PurchaseItem findByName(String name) {
 //		Optional<PurchaseItem> item = purchaseItemRepository.findByName(name);
 //		if (item.isEmpty()) {
@@ -93,10 +97,12 @@ public class PurchaseItemService {
 //		return item.get();
 //	}
 	public ApiPurchaseItem findAll(String jwtToken, String purchaseName) {
-		Purchase purchase = purchaseService.findByName(purchaseName,jwtToken);
-		
+		purchaseName = purchaseName.replace(" ", "_");
+		Purchase purchase = purchaseService.findByName(purchaseName, jwtToken);
+
 		return new ApiPurchaseItem(purchase.getId(), purchaseName, purchase.getItems());
 	}
+
 	// Atualizando total item
 	private BigDecimal attTotalPrice(Double quanrity, BigDecimal price) {
 		return price.multiply(new BigDecimal(quanrity));
@@ -148,7 +154,7 @@ public class PurchaseItemService {
 
 		item.setQuantity_average(quantityAverage(item.getQuantity(), updateItemPurchase.getQuantity()));
 
-		purchaseItemRepository.save(item);
+		save(item);
 
 		return item;
 
@@ -160,29 +166,37 @@ public class PurchaseItemService {
 
 	private Product findOldOrRegisterNewProduct(PurchaseItemVO purchaseItemVO) {
 		Product procudt = new Product();
-		try {
-			List<Product> products = procudService.findSpecificProduct(purchaseItemVO.getName(),
-					purchaseItemVO.getBrand());
-			//pega o ultimo a ser criado	
-			procudt = products.stream().max(Comparator.comparing(Product::getCreated_at))
-					.orElseThrow(() -> new NotFoundEntityException("Produto não encontrado"));
-		} catch (MsgException e) {
-
+		System.out.println();
+		System.out.println();
+		List<Product> products = procudService.findSpecificProduct(purchaseItemVO.getName(), purchaseItemVO.getBrand());
+		// pega o ultimo a ser criado
+		
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		procudt = products.stream().max(Comparator.comparing(Product::getCreated_at))
+				.orElseGet(() -> {
 			RegisterProductDTO registerProductDto = new RegisterProductDTO(purchaseItemVO.getName(),
 					purchaseItemVO.getBrand(), purchaseItemVO.getMeasurement_unit(),
 					purchaseItemVO.getQuantity_product(), purchaseItemVO.getPrice());
 
-			procudt = procudService.registration(registerProductDto);
-		}
+			return procudService.registration(registerProductDto);
+		});
 		return procudt;
 	}
 
 	private UsersDTO myPurchase(String jwtToken, Purchase purchase) {
 		UsersDTO user = usersService.findByJwt(jwtToken);
-		if (purchase.getUser_id().equals(user.getId())) {
+
+		if (!purchase.getUser_id().equals(user.getId())) {
+			logger.warn("Não autorizado.");
 			throw new MsgException("Não autorizado.");
 		}
 		return user;
+	}
+	private PurchaseItem save(PurchaseItem item) {
+		return purchaseItemRepository.save(item);
+
 	}
 
 }

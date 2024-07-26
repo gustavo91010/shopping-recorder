@@ -20,9 +20,5 @@ public class ApiPurchases {
 	public void setPurchases(List<Purchase> purchases) {
 		this.purchases = purchases;
 	}
-	
-
-
-	
 
 }

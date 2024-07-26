@@ -13,6 +13,7 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Long>{
 	@Query(value="select * from purchases where user_id= :user_id ", nativeQuery = true)
 	List<Purchase> findAllByUsers(Long user_id);
 	
+//	@Query(value="select * from purchases where name= :name ", nativeQuery = true)
 	Optional<Purchase> findByName(String name);
 
 	

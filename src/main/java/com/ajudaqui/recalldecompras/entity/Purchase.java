@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,6 +25,7 @@ public class Purchase {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private Long user_id;
+	@Column(name= "name")
 	private String name;
 	private LocalDateTime created_at;
 	private LocalDateTime updated_at;

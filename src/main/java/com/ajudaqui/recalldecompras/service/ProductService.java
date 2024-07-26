@@ -5,7 +5,6 @@ import static java.lang.String.format;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +31,7 @@ public class ProductService {
 
 		Validation.isPresencialValues(registerProductDto);
 
-		if (productIsRegisteder(registerProductDto.getName(), registerProductDto.getBrand())) {
+		if (productIsRegisteder(registerProductDto.getName().replace(" ", "_"), registerProductDto.getBrand())) {
 			String msg = format("Produto %s da marca %s já cadastrado.", registerProductDto.getName(),
 					registerProductDto.getBrand());
 			throw new MsgException(msg);
@@ -96,7 +95,12 @@ public class ProductService {
 	}
 
 	public List<Product> findSpecificProduct(String name, String brand) {
-		List<Product> product = productRepository.findSpecificProduct(name.toLowerCase(), brand.toLowerCase());
+		System.out.println("findSpecificProduct name " + name);
+		System.out.println("(formaterInput(name) name " + formaterInput(name));
+		System.out.println("findSpecificProduct brand " + brand);
+		List<Product> product = productRepository.findSpecificProduct(formaterInput(name), brand.toLowerCase());
+
+		System.out.println("é aqui pô " + product.size());
 		return product;
 	}
 
@@ -141,7 +145,25 @@ public class ProductService {
 	private Product save(Product product) {
 		logger.info(format("Produto atualizado / registrado com sucesso!"));
 		product.setUpdated_at(LocalDateTime.now());
+		product.setName(formaterInput(product.getName()));
 		return productRepository.save(product);
+	}
+
+	private String formaterInput(String value) {
+
+		if (value.contains(" ")) {
+			value = value.replace(" ", "_");
+		}
+		return value;
+	}
+
+	private String formaterOuput(String value) {
+
+		if (value.contains("_")) {
+			value = value.replace("_", " ");
+		}
+
+		return value.toLowerCase();
 	}
 
 }

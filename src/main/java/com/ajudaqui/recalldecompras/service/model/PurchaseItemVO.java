@@ -3,26 +3,27 @@ package com.ajudaqui.recalldecompras.service.model;
 import java.math.BigDecimal;
 
 public class PurchaseItemVO {
-	private Long purchaseId;
+	private String purchase_name;
+
 	private String name;
 	private String brand;
 	private String measurement_unit;
 	private Double quantity_product;
-	private Double quantity_items;
 	private BigDecimal price;
 	
+	private Double quantity_items;
 	
+	public String getPurchase_name() {
+		return purchase_name;
+	}
+	public void setPurchase_name(String purchase_name) {
+		this.purchase_name = purchase_name;
+	}
 	public BigDecimal getPrice() {
 		return price;
 	}
 	public void setPrice(BigDecimal price) {
 		this.price = price;
-	}
-	public Long getPurchaseId() {
-		return purchaseId;
-	}
-	public void setPurchaseId(Long purchaseId) {
-		this.purchaseId = purchaseId;
 	}
 	public String getName() {
 		return name;
@@ -53,6 +54,12 @@ public class PurchaseItemVO {
 	}
 	public void setQuantity_items(Double quantity_items) {
 		this.quantity_items = quantity_items;
+	}
+	@Override
+	public String toString() {
+		return "PurchaseItemVO [purchase_name=" + purchase_name + ", name=" + name + ", brand=" + brand
+				+ ", measurement_unit=" + measurement_unit + ", quantity_product=" + quantity_product
+				+ ", quantity_items=" + quantity_items + ", price=" + price + "]";
 	}
 	
 	

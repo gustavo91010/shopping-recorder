@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ajudaqui.recalldecompras.dto.response.ApiPurchase;
-import com.ajudaqui.recalldecompras.dto.response.ApiPurchases;
+import com.ajudaqui.recalldecompras.dto.response.PurchaseResponseAll;
 import com.ajudaqui.recalldecompras.entity.Purchase;
 import com.ajudaqui.recalldecompras.exception.ApiException;
 import com.ajudaqui.recalldecompras.exception.MsgException;
@@ -64,7 +64,7 @@ public class PurchaseController {
 		try {
 			 List<Purchase> product = purchaseService.findAllByUsers(jwt);
 			 
-			return new ResponseEntity<>(new ApiPurchases(product), HttpStatus.CREATED);
+			 return new ResponseEntity<>(new PurchaseResponseAll(product), HttpStatus.CREATED);
 
 		} catch (MsgException e) {
 			return new ApiException().response(e, HttpStatus.BAD_REQUEST);
