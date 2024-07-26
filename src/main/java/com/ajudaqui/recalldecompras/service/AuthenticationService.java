@@ -17,7 +17,6 @@ public class AuthenticationService {
 
 
 	public LoginResponse authenticateUser(LoginRequest loginRequest) {
-		System.out.println("passou no login??");
 		return authenticationClient.authenticateUser(loginRequest);
 	}
 

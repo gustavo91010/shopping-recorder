@@ -4,6 +4,7 @@ import static java.lang.String.format;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -14,13 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ajudaqui.recalldecompras.config.client.dto.UsersDTO;
+import com.ajudaqui.recalldecompras.dto.ItemResumeDTO;
 import com.ajudaqui.recalldecompras.dto.RegisterProductDTO;
 import com.ajudaqui.recalldecompras.dto.response.ApiPurchaseItem;
 import com.ajudaqui.recalldecompras.entity.Product;
 import com.ajudaqui.recalldecompras.entity.Purchase;
 import com.ajudaqui.recalldecompras.entity.PurchaseItem;
 import com.ajudaqui.recalldecompras.exception.MsgException;
-import com.ajudaqui.recalldecompras.exception.NotFoundEntityException;
 import com.ajudaqui.recalldecompras.repository.PurchaseItensRepository;
 import com.ajudaqui.recalldecompras.service.model.PurchaseItemVO;
 import com.ajudaqui.recalldecompras.service.model.UpdateItemPurchaseVO;
@@ -79,8 +80,6 @@ public class PurchaseItemService {
 		return purchase;
 	}
 
-	
-
 	private PurchaseItem findById(Long id) {
 		Optional<PurchaseItem> item = purchaseItemRepository.findById(id);
 		if (item.isEmpty()) {
@@ -98,9 +97,13 @@ public class PurchaseItemService {
 //	}
 	public ApiPurchaseItem findAll(String jwtToken, String purchaseName) {
 		purchaseName = purchaseName.replace(" ", "_");
-		Purchase purchase = purchaseService.findByName(purchaseName, jwtToken);
-
-		return new ApiPurchaseItem(purchase.getId(), purchaseName, purchase.getItems());
+		Purchase purchases = purchaseService.findByName(purchaseName, jwtToken);
+		List<ItemResumeDTO> itensResume = new ArrayList<>();
+		for (PurchaseItem purchase : purchases.getItems()) {
+			itensResume.add(new ItemResumeDTO(purchase));
+		}
+//		return new ApiPurchaseItem(purchases.getId(), purchaseName, purchases.getItems());
+		return new ApiPurchaseItem(purchases.getId(), purchaseName, itensResume);
 	}
 
 	// Atualizando total item
@@ -166,16 +169,8 @@ public class PurchaseItemService {
 
 	private Product findOldOrRegisterNewProduct(PurchaseItemVO purchaseItemVO) {
 		Product procudt = new Product();
-		System.out.println();
-		System.out.println();
 		List<Product> products = procudService.findSpecificProduct(purchaseItemVO.getName(), purchaseItemVO.getBrand());
-		// pega o ultimo a ser criado
-		
-		System.out.println();
-		System.out.println();
-		System.out.println();
-		procudt = products.stream().max(Comparator.comparing(Product::getCreated_at))
-				.orElseGet(() -> {
+		procudt = products.stream().max(Comparator.comparing(Product::getCreated_at)).orElseGet(() -> {
 			RegisterProductDTO registerProductDto = new RegisterProductDTO(purchaseItemVO.getName(),
 					purchaseItemVO.getBrand(), purchaseItemVO.getMeasurement_unit(),
 					purchaseItemVO.getQuantity_product(), purchaseItemVO.getPrice());
@@ -194,9 +189,12 @@ public class PurchaseItemService {
 		}
 		return user;
 	}
+
 	private PurchaseItem save(PurchaseItem item) {
 		return purchaseItemRepository.save(item);
 
 	}
+
+	
 
 }

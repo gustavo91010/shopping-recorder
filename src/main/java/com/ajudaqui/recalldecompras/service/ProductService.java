@@ -95,13 +95,7 @@ public class ProductService {
 	}
 
 	public List<Product> findSpecificProduct(String name, String brand) {
-		System.out.println("findSpecificProduct name " + name);
-		System.out.println("(formaterInput(name) name " + formaterInput(name));
-		System.out.println("findSpecificProduct brand " + brand);
-		List<Product> product = productRepository.findSpecificProduct(formaterInput(name), brand.toLowerCase());
-
-		System.out.println("é aqui pô " + product.size());
-		return product;
+		return productRepository.findSpecificProduct(formaterInput(name), brand.toLowerCase());
 	}
 
 	public boolean productIsRegisteder(String name, String brand) {

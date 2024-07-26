@@ -2,18 +2,17 @@ package com.ajudaqui.recalldecompras.dto.response;
 
 import java.util.List;
 
-import com.ajudaqui.recalldecompras.entity.PurchaseItem;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ajudaqui.recalldecompras.dto.ItemResumeDTO;
 
 public class ApiPurchaseItem {
 	private Long id;
 	private String name;
-	private List<PurchaseItem> itens;
+	private List<ItemResumeDTO> itens;
 	private int totalItens;
 
 	
 	
-	public ApiPurchaseItem(Long id, String name, List<PurchaseItem> itens) {
+	public ApiPurchaseItem(Long id, String name, List<ItemResumeDTO> itens) {
 		super();
 		this.id = id;
 		this.name = name.replace("_" ," ");
@@ -32,17 +31,17 @@ public class ApiPurchaseItem {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public List<PurchaseItem> getItens() {
-		return itens;
-	}
-	public void setItens(List<PurchaseItem> itens) {
-		this.itens = itens;
-	}
 	public int getTotalItens() {
 		return totalItens;
 	}
 	public void setTotalItens(int totalItens) {
 		this.totalItens = totalItens;
+	}
+	public List<ItemResumeDTO> getItens() {
+		return itens;
+	}
+	public void setItens(List<ItemResumeDTO> itens) {
+		this.itens = itens;
 	}
 	
 	

@@ -18,9 +18,8 @@ public class UsersService {
 	AuthenticationClient authenticationClient;
 	
 	public UsersDTO findByJwt(String jwt) {
-		logger.info("Buscando usuario pelo jwt hum...");
+		logger.info("Buscando usuario pelo jwt");
 	UsersDTO hum = authenticationClient.findByJwt(jwt);
-	System.out.println(hum);
 		try {
 			
 			return authenticationClient.findByJwt(jwt);

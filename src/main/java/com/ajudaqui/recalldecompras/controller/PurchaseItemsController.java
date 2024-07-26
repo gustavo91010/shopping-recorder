@@ -52,7 +52,6 @@ public class PurchaseItemsController {
 	public ResponseEntity<?> findAll(@RequestHeader("authorization") String jwtToken,
 			@PathVariable("purchase-name") String purchaseName) {
 		try {
-// todos os litens da lista
 			ApiPurchaseItem response = purchaseItemService.findAll(jwtToken, purchaseName);
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
 		} catch (MsgException e) {

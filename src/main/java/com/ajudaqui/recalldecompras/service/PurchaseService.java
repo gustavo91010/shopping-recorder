@@ -89,9 +89,6 @@ public class PurchaseService {
 		for (PurchaseItem item : purchase.getItems()) {
 			total = total.add(item.getTotalValue());
 		}
-		System.out.println("total "+total);
-		System.out.println("total "+total);
-		System.out.println("total "+total);
 		purchase.setTotalValue(total);
 		return purchase;
 	}
