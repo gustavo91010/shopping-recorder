@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import com.ajudaqui.recalldecompras.entity.PurchaseItem;
 
 public class ItemResumeDTO {
+	private long id;
 		String name;
 		String branch;
 		double quantity;
@@ -13,12 +14,24 @@ public class ItemResumeDTO {
 
 		public ItemResumeDTO(PurchaseItem item) {
 			super();
+			this.id= item.getId();
 			this.name = item.getProduct().getName();
 			this.branch = item.getProduct().getBrand();
 			this.quantity = item.getQuantity();
 			this.price = item.getProduct().getPrice();
 			this.price_total = item.getPrice_total();
 		}
+		
+
+		public long getId() {
+			return id;
+		}
+
+
+		public void setId(long id) {
+			this.id = id;
+		}
+
 
 		public String getName() {
 			return name;

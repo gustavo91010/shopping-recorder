@@ -15,11 +15,10 @@ public class UsersService {
 	Logger logger= LoggerFactory.getLogger(UsersService.class);
 	
 	@Autowired	
-	AuthenticationClient authenticationClient;
+	private AuthenticationClient authenticationClient;
 	
 	public UsersDTO findByJwt(String jwt) {
 		logger.info("Buscando usuario pelo jwt");
-	UsersDTO hum = authenticationClient.findByJwt(jwt);
 		try {
 			
 			return authenticationClient.findByJwt(jwt);
