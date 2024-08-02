@@ -88,13 +88,6 @@ public class PurchaseItemService {
 		return item.get();
 	}
 
-//	private PurchaseItem findByName(String name) {
-//		Optional<PurchaseItem> item = purchaseItemRepository.findByName(name);
-//		if (item.isEmpty()) {
-//			throw new MsgException("Item não encontrado");
-//		}
-//		return item.get();
-//	}
 	public ApiPurchaseItem findAll(String jwtToken, String purchaseName) {
 		purchaseName = purchaseName.replace(" ", "_");
 		Purchase purchases = purchaseService.findByName(purchaseName, jwtToken);
@@ -102,7 +95,6 @@ public class PurchaseItemService {
 		for (PurchaseItem purchase : purchases.getItems()) {
 			itensResume.add(new ItemResumeDTO(purchase));
 		}
-//		return new ApiPurchaseItem(purchases.getId(), purchaseName, purchases.getItems());
 		return new ApiPurchaseItem(purchases.getId(), purchaseName, itensResume);
 	}
 

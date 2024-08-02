@@ -36,7 +36,6 @@ public class PurchaseItemsController {
 			String msg = "Item adicionado com sucesso!";
 			purchaseItemService.newItem(jwtToken, purchaseItemVO);
 			logger.info(msg);
-//			return new ResponseEntity<>(new ApiPurchase(response), HttpStatus.CREATED);
 			return new ResponseEntity<>(new ApiMessage(msg), HttpStatus.CREATED);
 		} catch (MsgException e) {
 			return new ApiException().response(e, HttpStatus.BAD_REQUEST);

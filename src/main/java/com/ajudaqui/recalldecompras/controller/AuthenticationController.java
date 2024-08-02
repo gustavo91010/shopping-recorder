@@ -53,7 +53,6 @@ public class AuthenticationController {
 					e.getMessage());
 			logger.warn(msg);
 			return new ApiException().response(msg, HttpStatus.UNAUTHORIZED);
-//					ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 		}
 	}
 
