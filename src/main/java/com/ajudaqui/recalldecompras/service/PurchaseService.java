@@ -1,6 +1,7 @@
 package com.ajudaqui.recalldecompras.service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +30,8 @@ public class PurchaseService {
 	public Purchase newPurchase(String name, String jwt) {
 		UsersDTO user = usersService.findByJwt(jwt);
 		if (user == null) {
+			logger.warn("Usuário não encontrado");
+
 			throw new MsgException("Usuário não encontrado");
 		}
 		if (!purchaseRepository.findByName(name.replace(" ", "_")).isEmpty()) {
@@ -48,6 +51,8 @@ public class PurchaseService {
 	// clonagem do historico de compras
 	private Purchase shoppingClone(Long userId, Long purchaseId) {
 		if (!purchasePertenceUser(userId, purchaseId)) {
+			logger.warn("Compra não localizada.");
+
 			throw new NotFoundEntityException("Compra não localizada.");
 		}
 		Purchase purchase = findById(purchaseId);
@@ -75,55 +80,48 @@ public class PurchaseService {
 		return purchaseRepository.findAllByUsers(user.getId());
 	}
 
-	private Purchase attPurchase(Purchase purchase) {
-		purchase = save(purchase);
-		return purchase;
-
-	}
-
-	public Purchase totalPrice(Long id) {
-		Purchase purchase = findById(id);
+	private BigDecimal totalPrice(Purchase purchase) {
 
 		BigDecimal total = BigDecimal.ZERO;
-
 		for (PurchaseItem item : purchase.getItems()) {
 			total = total.add(item.getTotalValue());
 		}
-		purchase.setTotalValue(total);
-		return purchase;
+		return total;
 	}
 
 	public Purchase findByName(String name, String jwt) {
 
 		Optional<Purchase> purchase = purchaseRepository.findByName(name.replace(" ", "_"));
-//		Optional<Purchase> purchase = purchaseRepository.findByName(name);
 		if (purchase.isEmpty()) {
 			String msg = "Compra não encontrada";
 			logger.warn(msg);
+
 			throw new NotFoundEntityException(msg);
 		}
 		UsersDTO user = usersService.findByJwt(jwt);
 		logger.info(String.format("verificando responsavel pela compra: %s .", name));
+
+
 		if (user.getId() != purchase.get().getUser_id()) {
 			String msg = "Não autorizado";
 			logger.warn(msg);
+
 			throw new MsgException(msg);
 		}
 		return purchase.get();
 	}
-//	public Purchase findByName(String name) {
-//		Optional<Purchase> purchase = purchaseRepository.findByName(name);
-//		if (purchase.isEmpty()) {
-//			String msg = "Compra não encontrada";
-//			logger.warn(msg);
-//			throw new NotFoundEntityException(msg);
-//		}
-//		return purchase.get();
-//	}
 
-	public Purchase save(Purchase purchase) {
+	private Purchase save(Purchase purchase) {
 		purchase.setName(purchase.getName().replace(" ", "_"));
+		purchase.setUpdated_at(LocalDateTime.now());
+
 		return purchaseRepository.save(purchase);
+		
+	}
+	public Purchase update(Purchase purchase) {
+		purchase.setTotalValue(totalPrice(purchase));;
+
+		return save(purchase);
 		
 	}
 
